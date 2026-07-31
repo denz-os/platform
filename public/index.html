@@ -35,6 +35,10 @@
       cursor: none;
     }
 
+    @media(hover:hover){
+      *,*::before,*::after{cursor:none!important;}
+    }
+
     /* ===== COMET CURSOR ===== */
     #comet-cursor {
       position: fixed;
@@ -79,7 +83,7 @@
 
     /* ===== HERO ===== */
     .hero {
-      min-height: 60vh;
+      min-height: 100vh;
       background: var(--dark);
       display: grid;
       grid-template-columns: 1fr 38%;
@@ -100,8 +104,7 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 0 5vw 0 9vw;
-      padding-top: 8vh;
+      padding: 80px 5vw 0 9vw;
     }
 
     .hero-label {
@@ -1098,7 +1101,7 @@
           <span class="exp-num">04</span>
           <div class="exp-body">
             <p class="exp-name">StackScope</p>
-            <p class="exp-tech">Python &middot; Flask &middot; spaCy &middot; scikit-learn &middot; Docker</p>
+            <p class="exp-tech">Python &middot; Flask &middot; scikit-learn &middot; Docker</p>
             <p class="exp-desc">Job market intelligence for SA developers. Built a scraping pipeline across multiple job boards, extracted skill frequency data from the corpus, and scored developer profiles against the market using TF-IDF vectors and cosine similarity.</p>
           </div>
         </div>
@@ -1466,8 +1469,8 @@ const PROJECTS = [
   },
   {
     num: '04', name: 'StackScope',
-    desc: 'Job market intelligence for SA developers. Scrapes live job postings, extracts skill frequency across the corpus, tracks what\'s trending, and scores your stack against the market using TF-IDF and cosine similarity.',
-    stack: ['Python', 'Flask', 'spaCy', 'scikit-learn', 'SQLite', 'Docker', 'Vercel'],
+    desc: 'Job market intelligence for SA developers. Scrapes live job postings, extracts skill frequency across the corpus, tracks what\'s trending, and scores your stack against the market using TF-IDF vectorization and cosine similarity.',
+    stack: ['Python', 'Flask', 'scikit-learn', 'SQLite', 'Docker', 'Vercel'],
     live: 'https://stack-scope-eight.vercel.app',
     gh:   'https://github.com/denzelchingodza/StackScope',
     color: '#3a6ea5',
@@ -1658,8 +1661,7 @@ oc.addEventListener('mousemove', e => {
   const rect = oc.getBoundingClientRect();
   const mx = (e.clientX - rect.left) * (oc.width / rect.width) / dpr;
   const my = (e.clientY - rect.top)  * (oc.height / rect.height) / dpr;
-  oc.style.cursor = planets.some(p => p && Math.hypot(mx - p.x, my - p.y) < p.r)
-    ? 'pointer' : 'default';
+  oc.style.cursor = 'none';
 });
 
 oc.addEventListener('click', e => {

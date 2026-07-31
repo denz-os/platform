@@ -278,6 +278,125 @@
       margin-bottom: 40px;
     }
 
+    /* ===== TARS ===== */
+    .about-tars-wrap {
+      display: flex;
+      gap: 52px;
+      align-items: flex-start;
+      max-width: 1060px;
+    }
+    .tars-sidebar {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding-top: 52px;
+      position: sticky;
+      top: 90px;
+    }
+    .tars-label {
+      font-family: var(--ui);
+      font-size: 8px;
+      letter-spacing: 0.24em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      opacity: 0.45;
+    }
+    .tars-body-wrap {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .tars-bot {
+      width: 44px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .tars-seg {
+      background: #0c0c14;
+      border: 1px solid #1c1c2a;
+      border-radius: 2px;
+      position: relative;
+    }
+    .tars-seg-top    { height: 50px; }
+    .tars-seg-mid    { height: 68px; }
+    .tars-seg-bot    { height: 42px; }
+    .tars-eye {
+      position: absolute;
+      left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      width: 26px; height: 3px;
+      background: rgba(88,166,255,.9);
+      border-radius: 2px;
+      box-shadow: 0 0 8px rgba(88,166,255,.8), 0 0 18px rgba(88,166,255,.3);
+      animation: tarsEyePulse 3.2s ease-in-out infinite;
+    }
+    @keyframes tarsEyePulse {
+      0%,100% { opacity: .9; box-shadow: 0 0 8px rgba(88,166,255,.8); }
+      50%     { opacity: .4; box-shadow: 0 0 4px rgba(88,166,255,.3); }
+    }
+    .tars-seam {
+      height: 1px;
+      background: rgba(88,166,255,.25);
+      box-shadow: 0 0 5px rgba(88,166,255,.3);
+      animation: tarsSeamPulse 4s ease-in-out infinite;
+    }
+    @keyframes tarsSeamPulse {
+      0%,100% { opacity: .3; }
+      50%     { opacity: 1; box-shadow: 0 0 10px rgba(88,166,255,.5); }
+    }
+    .tars-bubbles {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 196px;
+    }
+    .tars-bubble {
+      background: #0d0d17;
+      border: 1px solid #1b1b2c;
+      border-radius: 8px 8px 8px 2px;
+      padding: 11px 13px;
+      opacity: 0;
+      transform: translateX(-8px);
+      transition: opacity .55s ease, transform .55s ease;
+    }
+    .tars-bubble.show { opacity: 1; transform: translateX(0); }
+    .tars-bubble-tag {
+      display: block;
+      font-family: var(--ui);
+      font-size: 7px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #3a8fff;
+      margin-bottom: 5px;
+    }
+    .tars-bubble p {
+      font-family: var(--body);
+      font-size: 11.5px;
+      line-height: 1.65;
+      color: #4e4e62;
+    }
+    .tars-stat {
+      font-family: var(--ui);
+      font-size: 7px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #22222e;
+      margin-top: 14px;
+      padding-top: 10px;
+      border-top: 1px solid #11111c;
+    }
+    .tars-stat span { color: #3a8fff; }
+    @media(max-width:860px){
+      .about-tars-wrap { flex-direction: column; }
+      .tars-sidebar { position: static; padding-top: 0; flex-direction: row; gap: 16px; }
+      .tars-bubbles { width: 100%; }
+      .tars-bot { display: none; }
+    }
+
     /* ===== ABOUT ===== */
     .about-grid {
       display: grid;
@@ -1032,7 +1151,8 @@
 
 <!-- ===== ABOUT ===== -->
 <section class="section" id="about">
-  <div class="section-inner" style="max-width: 720px;">
+  <div class="about-tars-wrap">
+  <div class="section-inner" style="max-width: 720px; flex:1;">
     <p class="section-label fade">About</p>
 
     <div class="about-grid">
@@ -1209,6 +1329,39 @@
       </div>
     </div>
   </div>
+
+  <!-- TARS -->
+  <div class="tars-sidebar fade">
+    <p class="tars-label">T · A · R · S</p>
+    <div class="tars-body-wrap">
+      <div class="tars-bot">
+        <div class="tars-seg tars-seg-top">
+          <div class="tars-eye"></div>
+        </div>
+        <div class="tars-seam"></div>
+        <div class="tars-seg tars-seg-mid"></div>
+        <div class="tars-seam"></div>
+        <div class="tars-seg tars-seg-bot"></div>
+      </div>
+      <div class="tars-bubbles">
+        <div class="tars-bubble" id="tarsBubble1">
+          <span class="tars-bubble-tag">AI Systems</span>
+          <p>He doesn't just use AI. He builds the infrastructure underneath it. RAG pipelines, vector search, embeddings. He understands what's actually happening.</p>
+        </div>
+        <div class="tars-bubble" id="tarsBubble2">
+          <span class="tars-bubble-tag">Full-Stack</span>
+          <p>Frontend. Backend. Database. Cloud. Infrastructure as code. He handles the whole stack. That combination is rarer than people think.</p>
+        </div>
+        <div class="tars-bubble" id="tarsBubble3">
+          <span class="tars-bubble-tag">Work Ethic</span>
+          <p>Midnight commits. Pre-dawn deploys. Ships first, sleeps second. The kind of engineer who makes everyone around him raise their standard.</p>
+        </div>
+        <p class="tars-stat">HONESTY: <span>90%</span> &nbsp;·&nbsp; HUMOR: <span>75%</span></p>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- /.about-tars-wrap -->
 </section>
 
 <!-- ===== PROJECTS (orbital) ===== -->
@@ -1501,6 +1654,26 @@ function draw(ts) {
 resize();
 requestAnimationFrame(draw);
 window.addEventListener('resize', resize);
+
+/* TARS BUBBLE REVEAL */
+(function() {
+  const bubbles = [
+    document.getElementById('tarsBubble1'),
+    document.getElementById('tarsBubble2'),
+    document.getElementById('tarsBubble3'),
+  ];
+  const tarsEl = document.querySelector('.tars-sidebar');
+  if (!tarsEl) return;
+  const obs = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting) {
+      bubbles.forEach((b, i) => {
+        if (b) setTimeout(() => b.classList.add('show'), i * 700);
+      });
+      obs.disconnect();
+    }
+  }, { threshold: 0.25 });
+  obs.observe(tarsEl);
+})();
 
 /* SCROLL HINT FADE */
 const scrollHint = document.getElementById('scrollHint');

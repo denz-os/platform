@@ -291,8 +291,8 @@
       flex-direction: column;
       align-items: flex-start;
       padding-top: 52px;
-      position: sticky;
-      top: 90px;
+      margin-left: 32px;
+      align-self: flex-start;
     }
     .tars-label {
       font-family: var(--ui);
@@ -348,22 +348,17 @@
       0%,100% { opacity: .3; }
       50%     { opacity: 1; box-shadow: 0 0 10px rgba(88,166,255,.5); }
     }
-    .tars-bubbles {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      width: 196px;
-    }
+    .tars-bubbles { width: 200px; }
     .tars-bubble {
       background: #0d0d17;
       border: 1px solid #1b1b2c;
       border-radius: 8px 8px 8px 2px;
-      padding: 11px 13px;
+      padding: 13px 14px;
+      min-height: 96px;
       opacity: 0;
-      transform: translateX(-8px);
-      transition: opacity .55s ease, transform .55s ease;
+      transition: opacity .4s ease;
     }
-    .tars-bubble.show { opacity: 1; transform: translateX(0); }
+    .tars-bubble.active { opacity: 1; }
     .tars-bubble-tag {
       display: block;
       font-family: var(--ui);
@@ -371,21 +366,32 @@
       letter-spacing: 0.2em;
       text-transform: uppercase;
       color: #3a8fff;
-      margin-bottom: 5px;
+      margin-bottom: 6px;
     }
     .tars-bubble p {
       font-family: var(--body);
       font-size: 11.5px;
       line-height: 1.65;
       color: #4e4e62;
+      min-height: 60px;
     }
+    .tars-cursor {
+      display: inline-block;
+      width: 6px; height: 11px;
+      background: #3a8fff;
+      vertical-align: middle;
+      margin-left: 2px;
+      animation: tarsBlink .75s step-end infinite;
+    }
+    .tars-cursor.hidden { opacity: 0; animation: none; }
+    @keyframes tarsBlink { 0%,100%{opacity:1} 50%{opacity:0} }
     .tars-stat {
       font-family: var(--ui);
       font-size: 7px;
       letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: #22222e;
-      margin-top: 14px;
+      color: #1e1e2c;
+      margin-top: 12px;
       padding-top: 10px;
       border-top: 1px solid #11111c;
     }
@@ -1344,17 +1350,9 @@
         <div class="tars-seg tars-seg-bot"></div>
       </div>
       <div class="tars-bubbles">
-        <div class="tars-bubble" id="tarsBubble1">
-          <span class="tars-bubble-tag">AI Systems</span>
-          <p>He doesn't just use AI. He builds the infrastructure underneath it. RAG pipelines, vector search, embeddings. He understands what's actually happening.</p>
-        </div>
-        <div class="tars-bubble" id="tarsBubble2">
-          <span class="tars-bubble-tag">Full-Stack</span>
-          <p>Frontend. Backend. Database. Cloud. Infrastructure as code. He handles the whole stack. That combination is rarer than people think.</p>
-        </div>
-        <div class="tars-bubble" id="tarsBubble3">
-          <span class="tars-bubble-tag">Work Ethic</span>
-          <p>Midnight commits. Pre-dawn deploys. Ships first, sleeps second. The kind of engineer who makes everyone around him raise their standard.</p>
+        <div class="tars-bubble" id="tarsBubble">
+          <span class="tars-bubble-tag" id="tarsBubbleTag"></span>
+          <p id="tarsBubbleText"><span id="tarsTyped"></span><span class="tars-cursor" id="tarsCursor"></span></p>
         </div>
         <p class="tars-stat">HONESTY: <span>90%</span> &nbsp;·&nbsp; HUMOR: <span>75%</span></p>
       </div>
@@ -1655,24 +1653,59 @@ resize();
 requestAnimationFrame(draw);
 window.addEventListener('resize', resize);
 
-/* TARS BUBBLE REVEAL */
+/* TARS TYPEWRITER */
 (function() {
-  const bubbles = [
-    document.getElementById('tarsBubble1'),
-    document.getElementById('tarsBubble2'),
-    document.getElementById('tarsBubble3'),
+  const MSGS = [
+    { tag: 'AI Systems',  text: "He doesn't just use AI. He builds the infrastructure underneath it. RAG pipelines, vector search, embeddings. He understands what's actually happening." },
+    { tag: 'Full-Stack',  text: "Frontend. Backend. Database. Cloud. Infrastructure as code. He handles the whole stack. That combination is rarer than people think." },
+    { tag: 'Work Ethic',  text: "Midnight commits. Pre-dawn deploys. Ships first, sleeps second. The kind of engineer who makes everyone around him raise their standard." },
   ];
+
+  const bubble  = document.getElementById('tarsBubble');
+  const tagEl   = document.getElementById('tarsBubbleTag');
+  const typedEl = document.getElementById('tarsTyped');
+  const cursor  = document.getElementById('tarsCursor');
+  if (!bubble) return;
+
+  let idx = 0, timer = null, started = false;
+
+  function type(msg, done) {
+    tagEl.textContent = msg.tag;
+    typedEl.textContent = '';
+    cursor.classList.remove('hidden');
+    let i = 0;
+    timer = setInterval(() => {
+      typedEl.textContent = msg.text.slice(0, ++i);
+      if (i >= msg.text.length) {
+        clearInterval(timer);
+        // pause then fade out before next
+        timer = setTimeout(() => {
+          cursor.classList.add('hidden');
+          bubble.classList.remove('active');
+          timer = setTimeout(done, 450);
+        }, 2800);
+      }
+    }, 26);
+  }
+
+  function next() {
+    bubble.classList.add('active');
+    type(MSGS[idx], () => {
+      idx = (idx + 1) % MSGS.length;
+      next();
+    });
+  }
+
+  // Start when TARS scrolls into view
   const tarsEl = document.querySelector('.tars-sidebar');
-  if (!tarsEl) return;
   const obs = new IntersectionObserver(entries => {
-    if (entries[0].isIntersecting) {
-      bubbles.forEach((b, i) => {
-        if (b) setTimeout(() => b.classList.add('show'), i * 700);
-      });
+    if (entries[0].isIntersecting && !started) {
+      started = true;
+      setTimeout(next, 400);
       obs.disconnect();
     }
-  }, { threshold: 0.25 });
-  obs.observe(tarsEl);
+  }, { threshold: 0.3 });
+  if (tarsEl) obs.observe(tarsEl);
 })();
 
 /* SCROLL HINT FADE */

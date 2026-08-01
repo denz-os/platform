@@ -1021,6 +1021,83 @@
       margin-top: 8px;
     }
 
+    /* ===== ENTRY ATMOSPHERE ===== */
+    #entry-canvas {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+    #entry::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 3px,
+        rgba(0,0,0,0.055) 3px,
+        rgba(0,0,0,0.055) 4px
+      );
+      pointer-events: none;
+      z-index: 3;
+    }
+    .entry-glow {
+      position: absolute;
+      width: 640px;
+      height: 640px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(30,42,100,0.32) 0%, transparent 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+      animation: entry-glow-pulse 5s ease-in-out infinite;
+    }
+    @keyframes entry-glow-pulse {
+      0%,100% { opacity: 1;   transform: translate(-50%,-50%) scale(1); }
+      50%      { opacity: 0.6; transform: translate(-50%,-50%) scale(1.18); }
+    }
+    .entry-monolith {
+      position: absolute;
+      right: 16vw;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      opacity: 0.1;
+      animation: entry-mono-breathe 7s ease-in-out infinite;
+    }
+    @keyframes entry-mono-breathe {
+      0%,100% { opacity: 0.10; }
+      50%      { opacity: 0.22; }
+    }
+    .em-seg {
+      width: 54px;
+      background: linear-gradient(90deg, transparent, #c8c6be 25%, #c8c6be 75%, transparent);
+      border-radius: 1px;
+    }
+    @media (max-width: 700px) { .entry-monolith { display: none; } }
+    /* Staggered entrance */
+    .entry-inner .entry-name,
+    .entry-inner .entry-btn,
+    .entry-inner .entry-hint,
+    .entry-inner .entry-quote,
+    .entry-inner .entry-quote-attr {
+      opacity: 0;
+      animation: entry-up 0.9s cubic-bezier(0.22,1,0.36,1) forwards;
+    }
+    .entry-inner .entry-name       { animation-delay: 0.5s; }
+    .entry-inner .entry-btn        { animation-delay: 1.1s; }
+    .entry-inner .entry-hint       { animation-delay: 1.35s; }
+    .entry-inner .entry-quote      { animation-delay: 1.7s; }
+    .entry-inner .entry-quote-attr { animation-delay: 1.95s; }
+    @keyframes entry-up {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
     /* ===== ANIMATIONS ===== */
     @keyframes up {
       from { opacity: 0; transform: translateY(16px); }
@@ -1084,6 +1161,13 @@
 
 <!-- ===== ENTRY OVERLAY ===== -->
 <div id="entry">
+  <canvas id="entry-canvas"></canvas>
+  <div class="entry-glow"></div>
+  <div class="entry-monolith">
+    <div class="em-seg" style="height:44px;"></div>
+    <div class="em-seg" style="height:66px;"></div>
+    <div class="em-seg" style="height:38px;"></div>
+  </div>
 <div class="entry-inner">
     <p class="entry-name">Denzel Chingodza</p>
     <button class="entry-btn" id="entryBtn" onclick="enterSite()">Enter</button>
@@ -2034,6 +2118,49 @@ const io = new IntersectionObserver(entries => {
   });
 }, { threshold: 0.08 });
 document.querySelectorAll('.fade').forEach(el => io.observe(el));
+
+/* ENTRY STARFIELD */
+(function () {
+  const canvas = document.getElementById('entry-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, stars = [], raf;
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  function mkStar() {
+    return {
+      x: Math.random() * W, y: Math.random() * H,
+      r: Math.random() * 0.85 + 0.15,
+      speed: Math.random() * 0.04 + 0.008,
+      a: Math.random() * 0.5,
+      da: (Math.random() * 0.0018 + 0.0004) * (Math.random() < 0.5 ? 1 : -1)
+    };
+  }
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    stars.forEach(s => {
+      s.a += s.da;
+      if (s.a <= 0 || s.a >= 0.55) s.da *= -1;
+      s.y -= s.speed;
+      if (s.y < 0) { s.y = H; s.x = Math.random() * W; s.a = 0; }
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(200,198,190,${s.a.toFixed(3)})`;
+      ctx.fill();
+    });
+    raf = requestAnimationFrame(draw);
+  }
+  resize();
+  stars = Array.from({ length: 90 }, mkStar);
+  window.addEventListener('resize', resize);
+  raf = requestAnimationFrame(draw);
+  const entryEl = document.getElementById('entry');
+  new MutationObserver((_, mo) => {
+    if (entryEl.classList.contains('gone')) { cancelAnimationFrame(raf); mo.disconnect(); }
+  }).observe(entryEl, { attributes: true, attributeFilter: ['class'] });
+})();
 
 </script>
 </body>

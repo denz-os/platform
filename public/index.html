@@ -1748,15 +1748,33 @@ function resizeOrbital() {
   }));
 }
 
-function drawCenter() {
-  // Subtle halo
-  const halo = octx.createRadialGradient(CX, CY, 3, CX, CY, 22);
-  halo.addColorStop(0, 'rgba(24,24,30,0.18)');
+function drawCenter(ts) {
+  // Heartbeat pulse — lub-dub pattern every 2.8s
+  const t  = (ts * 0.001) % 2.8;
+  const b1 = Math.exp(-18 * t * t);                              // first beat
+  const b2 = 0.55 * Math.exp(-18 * Math.pow(t - 0.32, 2));      // second beat
+  const beat = b1 + b2;
+
+  // Expanding pulse halo (grows & fades on each beat)
+  const pr = 8 + beat * 26;
+  const pa = beat * 0.4;
+  const pg = octx.createRadialGradient(CX, CY, pr * 0.35, CX, CY, pr);
+  pg.addColorStop(0, `rgba(24,24,30,${pa.toFixed(3)})`);
+  pg.addColorStop(1, 'rgba(24,24,30,0)');
+  octx.beginPath();
+  octx.arc(CX, CY, pr, 0, Math.PI * 2);
+  octx.fillStyle = pg;
+  octx.fill();
+
+  // Steady ambient halo
+  const halo = octx.createRadialGradient(CX, CY, 2, CX, CY, 18);
+  halo.addColorStop(0, 'rgba(24,24,30,0.20)');
   halo.addColorStop(1, 'rgba(24,24,30,0)');
   octx.beginPath();
-  octx.arc(CX, CY, 22, 0, Math.PI * 2);
+  octx.arc(CX, CY, 18, 0, Math.PI * 2);
   octx.fillStyle = halo;
   octx.fill();
+
   // Center dot
   octx.beginPath();
   octx.arc(CX, CY, 5, 0, Math.PI * 2);
@@ -1781,7 +1799,7 @@ function drawOrbital(ts) {
   });
 
   // Center point
-  drawCenter();
+  drawCenter(ts);
 
   planets = [];
   const t = ts * 0.001;

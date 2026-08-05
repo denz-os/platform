@@ -1413,6 +1413,7 @@
         <div id="projContent" style="display:none;">
           <p id="projNum"></p>
           <p id="projName"></p>
+          <span id="projAcademic" style="display:none;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:#8a8a94;border:1px solid rgba(138,138,148,0.25);border-radius:4px;padding:3px 8px;margin-bottom:10px;display:none;">Academic project</span>
           <p id="projDesc"></p>
           <div class="proj-stack" id="projStack"></div>
           <div class="proj-actions">
@@ -1822,7 +1823,15 @@ const PROJECTS = [
     color: '#8a8a94',
   },
   {
-    num: '03', name: 'ChunkDoc',
+    num: '03', name: 'AI Intelligence Layer',
+    desc: 'A natural language interface sitting on top of my own projects. You ask a plain English question — "what skills are trending for backend devs?" or "what\'s in this clinical guideline?" — and GPT-4o-mini routes it to the right service, StackScope or ChunkDoc, and returns the answer. One query endpoint to rule them all.',
+    stack: ['FastAPI', 'OpenAI', 'Python', 'Render', 'Vercel'],
+    live: 'https://ai-intelligence-layer.vercel.app',
+    gh:   'https://github.com/denzelchingodza/ai-intelligence-layer',
+    color: '#8B5E3C',
+  },
+  {
+    num: '04', name: 'ChunkDoc',
     desc: 'RAG-powered document Q&A built for medical students at Stellenbosch University\'s Tygerberg campus. Upload a PDF or DOCX, ask a question in plain English, get a grounded answer with the exact page number it came from. Built after interviewing students who were spending 45 minutes finding a single clinical criterion in a 200-page guideline.',
     stack: ['FastAPI', 'Next.js', 'pgvector', 'PostgreSQL', 'OpenAI'],
     live: 'https://doc-analyzer-as5k.vercel.app',
@@ -1830,7 +1839,7 @@ const PROJECTS = [
     color: '#591030',
   },
   {
-    num: '04', name: 'StackScope',
+    num: '05', name: 'StackScope',
     desc: 'Job market intelligence for SA developers. Scrapes live job postings, extracts skill frequency across the corpus, tracks what\'s trending, and scores your stack against the market using TF-IDF vectorization and cosine similarity.',
     stack: ['Python', 'Flask', 'scikit-learn', 'SQLite', 'Docker', 'Vercel'],
     live: 'https://stack-scope-eight.vercel.app',
@@ -1838,36 +1847,28 @@ const PROJECTS = [
     color: '#3a6ea5',
   },
   {
-    num: '05', name: 'AI Intelligence',
-    desc: 'Natural language query layer across personal projects. Ask a plain English question and GPT-4o-mini figures out which service to call, Sentinel or StackScope, and returns the answer.',
-    stack: ['FastAPI', 'OpenAI', 'Python', 'Render', 'Vercel'],
-    live: 'https://ai-intelligence-layer.vercel.app',
-    gh:   'https://github.com/denzelchingodza/ai-intelligence-layer',
-    color: '#8B5E3C',
-  },
-  {
     num: '06', name: 'LinkUP',
-    desc: 'A peer-to-peer marketplace for South Africa. Buy, sell, and connect with full user management, admin controls, product listings, cart, and messaging.',
+    desc: 'A peer-to-peer marketplace for South Africa. Buy, sell, and connect with full user management, admin controls, product listings, cart, and messaging. Academic project completed as part of my coursework.',
     stack: ['HTML', 'CSS', 'JavaScript', 'FastAPI', 'MongoDB'],
-    live: 'https://ecommerce-seven-iota-31.vercel.app',
+    academic: true,
     gh:   'https://github.com/denz-os/ecommerce',
     color: '#1c3461',
   },
   {
-    num: '07', name: 'MSG',
+    num: '07', name: 'SaaS Metrics DB',
+    desc: 'Subscription analytics engine with a full six-table PostgreSQL schema tracking every stage of a SaaS business. Calculates MRR, ARR, churn, LTV, ARPU, NRR, and cohort retention via async FastAPI endpoints. Ships with a live Netflix-themed dashboard that fetches and animates real metrics from the database. Academic project completed as part of my coursework.',
+    stack: ['PostgreSQL', 'FastAPI', 'asyncpg', 'Docker', 'Python'],
+    academic: true,
+    gh:   'https://github.com/denzelchingodza/saas-metric-db',
+    color: '#2a6e5a',
+  },
+  {
+    num: '08', name: 'MSG',
     desc: 'Full stack shrine to the New York Knicks, your 2026 NBA Champions. Fact Roulette, the Rage Bait Machine, The Gauntlet, Trash Talk Generator, The Faith, and Championship 26. Pure, medically concerning fandom. Bing bong.',
     stack: ['Next.js', 'FastAPI'],
     live: 'https://msg-coral.vercel.app',
     gh:   'https://github.com/denzelchingodza/msg',
     color: '#F47B20',
-  },
-  {
-    num: '08', name: 'SaaS Metrics DB',
-    desc: 'Subscription analytics engine with a full six-table PostgreSQL schema tracking every stage of a SaaS business. Calculates MRR, ARR, churn, LTV, ARPU, NRR, and cohort retention via async FastAPI endpoints. Ships with a live Netflix-themed dashboard that fetches and animates real metrics from the database.',
-    stack: ['PostgreSQL', 'FastAPI', 'asyncpg', 'Docker', 'Python'],
-    live: 'https://saas-metric-db.onrender.com',
-    gh:   'https://github.com/denzelchingodza/saas-metric-db',
-    color: '#2a6e5a',
   },
 ];
 
@@ -2034,6 +2035,8 @@ function showProject(i) {
   } else {
     liveBtn.style.display = 'none';
   }
+  const badge = document.getElementById('projAcademic');
+  badge.style.display = p.academic ? 'inline-block' : 'none';
   document.getElementById('projGh').href = p.gh;
 }
 

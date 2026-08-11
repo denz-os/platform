@@ -84,27 +84,31 @@
       font-size: 11px;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      display: inline-block;
+      display: inline-flex;
+      flex-direction: column;
+      overflow: hidden;
+      height: 1.1em;
       position: relative;
-      transition: opacity 0.1s;
     }
-    .nav-links a::before {
+    /* visible text — slides UP on hover */
+    .nav-links a .nav-text {
+      display: block;
+      transition: transform 0.45s cubic-bezier(0.76, 0, 0.24, 1);
+    }
+    .nav-links a:hover .nav-text {
+      transform: translateY(-120%);
+    }
+    /* drop-in copy — starts below, falls into place */
+    .nav-links a::after {
       content: attr(data-label);
       position: absolute;
-      inset: 0;
-      color: #fff;
+      top: 0; left: 0;
+      transform: translateY(120%);
+      transition: transform 0.45s cubic-bezier(0.76, 0, 0.24, 1);
     }
-    .nav-links a::after {
-      content: '';
-      position: absolute;
-      bottom: -3px;
-      left: 0;
-      width: 0;
-      height: 1px;
-      background: #fff;
-      transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    .nav-links a:hover::after {
+      transform: translateY(0);
     }
-    .nav-links a:hover::after { width: 100%; }
     /* section index number on hover */
     .nav-links li .nav-idx {
       position: absolute;
@@ -1327,10 +1331,10 @@
 
 <nav>
   <ul class="nav-links">
-    <li><span class="nav-idx">01</span><a href="#about" data-label="About">About</a></li>
-    <li><span class="nav-idx">02</span><a href="#work" data-label="Work">Work</a></li>
-    <li><span class="nav-idx">03</span><a href="#skills" data-label="Skills">Skills</a></li>
-    <li><span class="nav-idx">04</span><a href="#contact" data-label="Contact">Contact</a></li>
+    <li><span class="nav-idx">01</span><a href="#about" data-label="About"><span class="nav-text">About</span></a></li>
+    <li><span class="nav-idx">02</span><a href="#work" data-label="Work"><span class="nav-text">Work</span></a></li>
+    <li><span class="nav-idx">03</span><a href="#skills" data-label="Skills"><span class="nav-text">Skills</span></a></li>
+    <li><span class="nav-idx">04</span><a href="#contact" data-label="Contact"><span class="nav-text">Contact</span></a></li>
   </ul>
 </nav>
 
@@ -2360,39 +2364,6 @@ document.querySelectorAll('.fade').forEach(el => io.observe(el));
   }).observe(entryEl, { attributes: true, attributeFilter: ['class'] });
 })();
 
-/* ===== NAV SCRAMBLE ===== */
-(function() {
-  const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  document.querySelectorAll('.nav-links a').forEach(el => {
-    const original = el.getAttribute('data-label');
-    let frame = null;
-
-    function scramble() {
-      cancelAnimationFrame(frame);
-      let iter = 0;
-      const totalSteps = original.length * 3;
-
-      function tick() {
-        el.textContent = original.split('').map((ch, i) => {
-          if (i < Math.floor(iter / 3)) return original[i];
-          return CHARS[Math.floor(Math.random() * CHARS.length)];
-        }).join('');
-        iter++;
-        if (iter < totalSteps) frame = requestAnimationFrame(tick);
-        else el.textContent = original;
-      }
-      tick();
-    }
-
-    function reset() {
-      cancelAnimationFrame(frame);
-      el.textContent = original;
-    }
-
-    el.addEventListener('mouseenter', scramble);
-    el.addEventListener('mouseleave', reset);
-  });
-})();
 
 </script>
 </body>

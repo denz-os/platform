@@ -173,6 +173,78 @@
       animation: up .9s .4s forwards;
     }
 
+    /* ===== GLITCH ===== */
+    .glitch-shake {
+      animation: gshake 0.14s 1.5s infinite steps(2, end);
+    }
+    @keyframes gshake {
+      0%   { transform: translateX(0); }
+      50%  { transform: translateX(-1.5px); }
+      100% { transform: translateX(1px); }
+    }
+
+    .glitch {
+      position: relative;
+      display: inline-block;
+    }
+    .glitch::before,
+    .glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--dark);
+      font-family: inherit;
+      font-size: inherit;
+      font-weight: inherit;
+      line-height: inherit;
+      letter-spacing: inherit;
+      clip-path: inset(100% 0 0 0);
+    }
+    .glitch::before {
+      color: #ff1744;
+      animation: ga 1.6s 1.6s infinite steps(1, end);
+    }
+    .glitch::after {
+      color: #00e5ff;
+      animation: gb 2.1s 1.6s infinite steps(1, end);
+    }
+
+    @keyframes ga {
+      0%   { clip-path: inset(92% 0 0%  0); transform: translateX(-4px); }
+      8%   { clip-path: inset(18% 0 72% 0); transform: translateX(5px);  }
+      16%  { clip-path: inset(60% 0 28% 0); transform: translateX(-3px); }
+      24%  { clip-path: inset(4%  0 90% 0); transform: translateX(6px);  }
+      32%  { clip-path: inset(44% 0 44% 0); transform: translateX(-2px); }
+      40%  { clip-path: inset(76% 0 12% 0); transform: translateX(4px);  }
+      48%  { clip-path: inset(0%  0 94% 0); transform: translateX(-5px); }
+      56%  { clip-path: inset(33% 0 60% 0); transform: translateX(3px);  }
+      64%  { clip-path: inset(80% 0 8%  0); transform: translateX(-4px); }
+      72%  { clip-path: inset(12% 0 82% 0); transform: translateX(5px);  }
+      80%  { clip-path: inset(56% 0 36% 0); transform: translateX(-2px); }
+      88%  { clip-path: inset(90% 0 2%  0); transform: translateX(4px);  }
+      96%  { clip-path: inset(26% 0 68% 0); transform: translateX(-3px); }
+      100% { clip-path: inset(92% 0 0%  0); transform: translateX(-4px); }
+    }
+
+    @keyframes gb {
+      0%   { clip-path: inset(2%  0 90% 0); transform: translateX(4px);  }
+      8%   { clip-path: inset(64% 0 22% 0); transform: translateX(-3px); }
+      16%  { clip-path: inset(20% 0 70% 0); transform: translateX(6px);  }
+      24%  { clip-path: inset(86% 0 6%  0); transform: translateX(-2px); }
+      32%  { clip-path: inset(40% 0 50% 0); transform: translateX(3px);  }
+      40%  { clip-path: inset(6%  0 88% 0); transform: translateX(-5px); }
+      48%  { clip-path: inset(72% 0 20% 0); transform: translateX(2px);  }
+      56%  { clip-path: inset(28% 0 64% 0); transform: translateX(-4px); }
+      64%  { clip-path: inset(50% 0 44% 0); transform: translateX(5px);  }
+      72%  { clip-path: inset(94% 0 0%  0); transform: translateX(-3px); }
+      80%  { clip-path: inset(10% 0 84% 0); transform: translateX(6px);  }
+      88%  { clip-path: inset(74% 0 16% 0); transform: translateX(-2px); }
+      96%  { clip-path: inset(36% 0 58% 0); transform: translateX(4px);  }
+      100% { clip-path: inset(2%  0 90% 0); transform: translateX(4px);  }
+    }
+
     .hero-bio {
       font-family: var(--body);
       font-size: 14px;
@@ -1268,7 +1340,9 @@
 
   <div class="hero-text">
     <p class="hero-label">Software Developer, South Africa</p>
-    <h1>Denzel<br>Chingodza</h1>
+    <div class="glitch-shake">
+      <h1><span class="glitch" data-text="Denzel">Denzel</span><br><span class="glitch" data-text="Chingodza">Chingodza</span></h1>
+    </div>
     <p class="hero-bio">
       Final year Software Engineering student. Python developer. I build AI systems,
       APIs, and infrastructure because I need to understand how things actually work.

@@ -64,30 +64,64 @@
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 900;
-      padding: 22px 52px;
+      padding: 26px 52px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: flex-end;
       mix-blend-mode: difference;
       pointer-events: none;
     }
     nav a { pointer-events: all; color: #fff; text-decoration: none; }
 
-    .nav-logo {
-      font-family: var(--display);
-      font-size: 10px;
-      letter-spacing: 0.22em;
-    }
-
     .nav-links {
       display: flex;
-      gap: 36px;
+      gap: 40px;
       list-style: none;
     }
+    .nav-links li { position: relative; }
     .nav-links a {
       font-family: var(--ui);
-      font-size: 12px;
-      letter-spacing: 0.04em;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      display: inline-block;
+      position: relative;
+      transition: opacity 0.1s;
+    }
+    .nav-links a::before {
+      content: attr(data-label);
+      position: absolute;
+      inset: 0;
+      color: #fff;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: #fff;
+      transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .nav-links a:hover::after { width: 100%; }
+    /* section index number on hover */
+    .nav-links li .nav-idx {
+      position: absolute;
+      top: -12px;
+      left: 0;
+      font-family: var(--display);
+      font-size: 8px;
+      letter-spacing: 0.1em;
+      color: #fff;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.2s, transform 0.2s;
+      pointer-events: none;
+    }
+    .nav-links li:hover .nav-idx {
+      opacity: 0.45;
+      transform: translateY(0);
     }
 
     /* ===== HERO ===== */
@@ -1218,12 +1252,11 @@
 </div>
 
 <nav>
-  <a href="#top" class="nav-logo">DC</a>
   <ul class="nav-links">
-    <li><a href="#about">About</a></li>
-    <li><a href="#work">Work</a></li>
-    <li><a href="#skills">Skills</a></li>
-    <li><a href="#contact">Contact</a></li>
+    <li><span class="nav-idx">01</span><a href="#about" data-label="About">About</a></li>
+    <li><span class="nav-idx">02</span><a href="#work" data-label="Work">Work</a></li>
+    <li><span class="nav-idx">03</span><a href="#skills" data-label="Skills">Skills</a></li>
+    <li><span class="nav-idx">04</span><a href="#contact" data-label="Contact">Contact</a></li>
   </ul>
 </nav>
 
@@ -2249,6 +2282,40 @@ document.querySelectorAll('.fade').forEach(el => io.observe(el));
   new MutationObserver((_, mo) => {
     if (entryEl.classList.contains('gone')) { cancelAnimationFrame(raf); mo.disconnect(); }
   }).observe(entryEl, { attributes: true, attributeFilter: ['class'] });
+})();
+
+/* ===== NAV SCRAMBLE ===== */
+(function() {
+  const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  document.querySelectorAll('.nav-links a').forEach(el => {
+    const original = el.getAttribute('data-label');
+    let frame = null;
+
+    function scramble() {
+      cancelAnimationFrame(frame);
+      let iter = 0;
+      const totalSteps = original.length * 3;
+
+      function tick() {
+        el.textContent = original.split('').map((ch, i) => {
+          if (i < Math.floor(iter / 3)) return original[i];
+          return CHARS[Math.floor(Math.random() * CHARS.length)];
+        }).join('');
+        iter++;
+        if (iter < totalSteps) frame = requestAnimationFrame(tick);
+        else el.textContent = original;
+      }
+      tick();
+    }
+
+    function reset() {
+      cancelAnimationFrame(frame);
+      el.textContent = original;
+    }
+
+    el.addEventListener('mouseenter', scramble);
+    el.addEventListener('mouseleave', reset);
+  });
 })();
 
 </script>

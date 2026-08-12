@@ -134,6 +134,23 @@
       position: relative;
       overflow: hidden;
     }
+    /* drifting nebula behind stars */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: -20%;
+      background:
+        radial-gradient(ellipse 55% 45% at 28% 48%, rgba(18,28,60,0.55) 0%, transparent 100%),
+        radial-gradient(ellipse 40% 55% at 72% 62%, rgba(10,18,42,0.45) 0%, transparent 100%);
+      animation: nebula-drift 22s ease-in-out infinite alternate;
+      z-index: 0;
+      pointer-events: none;
+    }
+    @keyframes nebula-drift {
+      0%   { transform: translate(0, 0)       scale(1);    opacity: 1;   }
+      50%  { transform: translate(-4%, 2%)    scale(1.05); opacity: 0.7; }
+      100% { transform: translate(3%, -3%)    scale(1.02); opacity: 1;   }
+    }
 
     #stars {
       position: absolute;
@@ -1786,9 +1803,16 @@ function resize() {
       a:  tier < 0.62 ? Math.random() * 0.22 + 0.04
         : tier < 0.90 ? Math.random() * 0.40 + 0.12
         :               Math.random() * 0.55 + 0.30,
+      // parallax drift — distant stars much slower than close ones
+      vx: tier < 0.62 ? 0.008 + Math.random() * 0.006
+        : tier < 0.90 ? 0.022 + Math.random() * 0.012
+        :               0.055 + Math.random() * 0.025,
+      vy: tier < 0.62 ? 0.003 + Math.random() * 0.003
+        : tier < 0.90 ? 0.008 + Math.random() * 0.006
+        :               0.018 + Math.random() * 0.010,
       ph:      Math.random() * Math.PI * 2,
       sp:      Math.random() * 0.009 + 0.001,
-      sparkle: tier > 0.90 && Math.random() < 0.55, // bright stars get cross-sparkle
+      sparkle: tier > 0.90 && Math.random() < 0.55,
     };
   });
 }
@@ -1830,6 +1854,11 @@ function draw(ts) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   const t = ts * 0.001;
   stars.forEach(s => {
+    // drift with wraparound
+    s.x += s.vx;
+    s.y += s.vy;
+    if (s.x > canvas.width  + 2) s.x = -2;
+    if (s.y > canvas.height + 2) s.y = -2;
     const a = s.a * (0.35 + 0.65 * Math.sin(t * s.sp * 7 + s.ph));
     drawStar(s, a);
   });

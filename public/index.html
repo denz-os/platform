@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Denzel Chingodza — CS Student & Full-Stack Developer</title>
-  <meta name="description" content="CS student at Stellenbosch University building full-stack applications, developer tools, and AI systems. Projects include Sentinel, StackScope, ChunkDoc, and the AI Intelligence Layer." />
+  <meta name="description" content="CS student at Stellenbosch University building full-stack applications, developer tools, and AI systems. Projects include Sentinel, StackScope, ChunkDoc, the AI Intelligence Layer, and Muzezuru — a fine-tuned Shona-language LLM." />
   <meta name="author" content="Denzel Chingodza" />
-  <meta name="keywords" content="Denzel Chingodza, CS student, Stellenbosch University, full-stack developer, StackScope, Sentinel, ChunkDoc, AI Intelligence Layer, South Africa" />
+  <meta name="keywords" content="Denzel Chingodza, CS student, Stellenbosch University, full-stack developer, StackScope, Sentinel, ChunkDoc, AI Intelligence Layer, Muzezuru, Shona AI, QLoRA, LLM fine-tuning, South Africa" />
   <link rel="canonical" href="https://denzelchingodza.vercel.app/" />
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
@@ -1295,7 +1295,7 @@
       "@type": "CollegeOrUniversity",
       "name": "Stellenbosch University"
     },
-    "knowsAbout": ["Full-Stack Development", "Python", "Next.js", "FastAPI", "AWS", "AI Systems"],
+    "knowsAbout": ["Full-Stack Development", "Python", "Next.js", "FastAPI", "AWS", "AI Systems", "LLM Fine-Tuning", "QLoRA", "NLP", "Low-Resource Language AI"],
     "sameAs": ["https://github.com/denzelchingodza"]
   }
   </script>
@@ -1429,8 +1429,13 @@
           <span class="anno-mark underline blue" data-anno-group="0" data-anno-delay="500"><span>ChunkDoc</span><svg viewBox="0 0 100 12" preserveAspectRatio="none"><path d="M1,8 Q50,4 99,8" stroke-width="2.5" stroke-dasharray="120" stroke-dashoffset="120"/></svg></span>:
           a production RAG system with semantic retrieval, pgvector cosine similarity search, and page-level citations, grounded entirely in the uploaded document. I also built an
           <span class="anno-mark underline blue" data-anno-group="0" data-anno-delay="1000"><span>AI Intelligence Layer</span><svg viewBox="0 0 100 12" preserveAspectRatio="none"><path d="M1,8 Q50,5 99,8" stroke-width="2.5" stroke-dasharray="120" stroke-dashoffset="120"/></svg></span>
-          that routes plain English questions across my own services, deciding which system to call and returning the answer. I
-          <span class="anno-mark underline blue" data-anno-group="0" data-anno-delay="1500"><span>use AI tools as part of my daily workflow</span><svg viewBox="0 0 100 12" preserveAspectRatio="none"><path d="M1,8 Q50,4 99,8" stroke-width="2.5" stroke-dasharray="120" stroke-dashoffset="120"/></svg></span>
+          that routes plain English questions across my own services, deciding which system to call and returning the answer.
+          More recently I fine-tuned
+          <span class="anno-mark underline blue" data-anno-group="0" data-anno-delay="1200"><span>BLOOMZ-3B for Shona</span><svg viewBox="0 0 100 12" preserveAspectRatio="none"><path d="M1,8 Q50,4 99,8" stroke-width="2.5" stroke-dasharray="120" stroke-dashoffset="120"/></svg></span>
+          — one of Zimbabwe's main languages and severely underrepresented in mainstream AI — using QLoRA with 4-bit quantization. I cleaned a contaminated training dataset, built a manual 15-prompt evaluation scorecard (because no standard Shona benchmark exists), and deployed the model as a live demo on Hugging Face Spaces. The project is called
+          <span class="anno-mark underline blue" data-anno-group="0" data-anno-delay="1400"><span>Muzezuru</span><svg viewBox="0 0 100 12" preserveAspectRatio="none"><path d="M1,8 Q50,5 99,8" stroke-width="2.5" stroke-dasharray="120" stroke-dashoffset="120"/></svg></span>.
+          I
+          <span class="anno-mark underline blue" data-anno-group="0" data-anno-delay="1600"><span>use AI tools as part of my daily workflow</span><svg viewBox="0 0 100 12" preserveAspectRatio="none"><path d="M1,8 Q50,4 99,8" stroke-width="2.5" stroke-dasharray="120" stroke-dashoffset="120"/></svg></span>
           to learn faster, move with more precision, and ship better work. The point is always to understand what I'm building, not to outsource the thinking.
         </p>
 
@@ -1480,7 +1485,7 @@
 
       <div class="about-card fade">
         <p class="about-card-title">Building into</p>
-        <p class="about-card-body">NLP, language models, RAG pipelines, vector databases, model fine tuning. I use AI tools in my daily workflow and I study the engineering behind them. I pick things up fast because I want to understand them properly.</p>
+        <p class="about-card-body">NLP, language models, RAG pipelines, vector databases, model fine-tuning. Specifically QLoRA fine-tuning of large language models for low-resource languages — BLOOMZ-3B for Shona is live. I study the engineering behind what I use, not just the output.</p>
       </div>
 
       <div class="about-card fade">
@@ -1602,6 +1607,10 @@
           <span class="stag">scikit-learn</span>
           <span class="stag">OpenAI APIs</span>
           <span class="stag">pgvector</span>
+          <span class="stag">HuggingFace Transformers</span>
+          <span class="stag">PEFT / QLoRA</span>
+          <span class="stag">bitsandbytes</span>
+          <span class="stag">Gradio</span>
         </div>
       </div>
       <div class="skills-row">

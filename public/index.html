@@ -1407,15 +1407,16 @@
         <p>
           I build
           <span class="anno-mark underline" data-anno-group="1" data-anno-delay="0"><span>full systems</span><svg viewBox="0 0 100 12" preserveAspectRatio="none"><path d="M1,8 Q50,5 99,8" stroke-width="2.5" stroke-dasharray="120" stroke-dashoffset="120"/></svg></span>:
-          backend, database, API layer, cloud infrastructure, deployment pipeline.
+          backend, database, API layer, cloud infrastructure, deployment pipeline — and I own every layer.
           <span class="anno-mark underline" data-anno-group="1" data-anno-delay="400"><span>Sentinel</span><svg viewBox="0 0 100 12" preserveAspectRatio="none"><path d="M1,8 Q50,4 99,8" stroke-width="2.5" stroke-dasharray="120" stroke-dashoffset="120"/></svg></span>
-          is a serverless alerting platform built on AWS Lambda, DynamoDB, EventBridge and SES, with infrastructure provisioned through Terraform.
+          is a fully serverless uptime monitoring platform: Lambda functions poll registered endpoints on a 60-second cycle, EventBridge handles scheduling, DynamoDB stores incident history and response times, and SES fires email alerts on status change. The entire infrastructure is defined in Terraform and reprovisioned from code.
           <span class="anno-mark underline" data-anno-group="1" data-anno-delay="800"><span>StackScope</span><svg viewBox="0 0 100 12" preserveAspectRatio="none"><path d="M1,8 Q50,5 99,8" stroke-width="2.5" stroke-dasharray="120" stroke-dashoffset="120"/></svg></span>
-          scrapes live job postings across South Africa, extracts skill frequency across the corpus, and scores your stack against the market.
-          I also step into
-          <span class="anno-mark underline" data-anno-group="1" data-anno-delay="1200"><span>existing systems and contribute to them</span><svg viewBox="0 0 100 12" preserveAspectRatio="none"><path d="M1,8 Q25,4 50,8 Q75,11 99,7" stroke-width="2.5" stroke-dasharray="120" stroke-dashoffset="120"/></svg></span>:
-          reading the history, understanding the current state, seeing where it is going, and adding to that arc without breaking what is already working.
-          A friend runs a glass and aluminium business in Harare. I proposed a proper web application and built it from scratch. A real client, a real brief, a live system in production.
+          scrapes live job postings across South Africa and remote boards, runs TF-IDF vectorization across the full corpus, scores your skill stack against the market using cosine similarity, and tracks which skills are rising or falling using linear regression on rolling weekly data.
+          <span class="anno-mark underline" data-anno-group="1" data-anno-delay="1100"><span>ChunkDoc</span><svg viewBox="0 0 100 12" preserveAspectRatio="none"><path d="M1,8 Q50,4 99,8" stroke-width="2.5" stroke-dasharray="120" stroke-dashoffset="120"/></svg></span>
+          is a production RAG pipeline: documents are chunked and embedded on upload, stored in PostgreSQL with pgvector, and retrieved via cosine similarity search at query time, with answers grounded to the exact page they came from.
+          A friend runs a glass and aluminium business in Harare. I proposed a proper web application and
+          <span class="anno-mark underline" data-anno-group="1" data-anno-delay="1400"><span>built PBS Projects from scratch</span><svg viewBox="0 0 100 12" preserveAspectRatio="none"><path d="M1,8 Q25,4 50,8 Q75,11 99,7" stroke-width="2.5" stroke-dasharray="120" stroke-dashoffset="120"/></svg></span>:
+          job gallery, quote request pipeline, testimonial moderation, full product catalogue, and bilingual English and Shona support, deployed and live. Real client, real brief, real production system.
           <span class="anno-mark underline" data-anno-group="2" data-anno-delay="0"><span>That is the standard I hold myself to.</span><svg viewBox="0 0 100 12" preserveAspectRatio="none"><path d="M1,8 Q20,4 50,9 Q80,4 99,8" stroke-width="2.5" stroke-dasharray="120" stroke-dashoffset="120"/></svg></span>
         </p>
 

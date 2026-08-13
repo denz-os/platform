@@ -1760,7 +1760,7 @@
 
   <div class="footer-bottom">
     <span class="footer-credit">Production made by Denzel Chingodza</span>
-    <span class="footer-built">Built with HTML / CSS / JS</span>
+    <span class="footer-built">Built with HTML / CSS / JS &middot; developed with the help of Claude, for learning purposes</span>
   </div>
 </footer>
 
@@ -1988,23 +1988,7 @@ const PROJECTS = [
     color: '#3a6ea5',
   },
   {
-    num: '06', name: 'LinkUP',
-    desc: 'A peer-to-peer marketplace for South Africa. Buy, sell, and connect with full user management, admin controls, product listings, cart, and messaging. Academic project completed as part of my coursework.',
-    stack: ['HTML', 'CSS', 'JavaScript', 'FastAPI', 'MongoDB'],
-    academic: true,
-    gh:   'https://github.com/denz-os/ecommerce',
-    color: '#1c3461',
-  },
-  {
-    num: '07', name: 'SaaS Metrics DB',
-    desc: 'Subscription analytics engine with a full six-table PostgreSQL schema tracking every stage of a SaaS business. Calculates MRR, ARR, churn, LTV, ARPU, NRR, and cohort retention via async FastAPI endpoints. Ships with a live Netflix-themed dashboard that fetches and animates real metrics from the database. Academic project completed as part of my coursework.',
-    stack: ['PostgreSQL', 'FastAPI', 'asyncpg', 'Docker', 'Python'],
-    academic: true,
-    gh:   'https://github.com/denzelchingodza/saas-metric-db',
-    color: '#2a6e5a',
-  },
-  {
-    num: '08', name: 'MSG',
+    num: '06', name: 'MSG',
     desc: 'Full stack shrine to the New York Knicks, your 2026 NBA Champions. Fact Roulette, the Rage Bait Machine, The Gauntlet, Trash Talk Generator, The Faith, and Championship 26. Pure, medically concerning fandom. Bing bong.',
     stack: ['Next.js', 'FastAPI'],
     live: 'https://msg-coral.vercel.app',
@@ -2012,7 +1996,7 @@ const PROJECTS = [
     color: '#F47B20',
   },
   {
-    num: '09', name: 'Muzezuru',
+    num: '07', name: 'Muzezuru',
     desc: 'A Shona-language conversational AI fine-tuned from BLOOMZ-3B using QLoRA, built entirely on free tier compute: Google Colab, Kaggle notebooks, and Hugging Face ZeroGPU. Shona is one of Zimbabwe\'s main languages and severely underrepresented in mainstream AI training data, which is why this project exists. Discovered and fixed an 84% data contamination issue in the primary training dataset before retraining on the cleaned version. Built a custom 15-prompt evaluation scorecard across 7 categories since no standard Shona benchmark exists. Ships with a Next.js chat frontend deployed on Vercel. Active development: the pipeline is proven end-to-end, the next phase focuses on factual precision using curated Zimbabwean data.',
     stack: ['Python', 'BLOOMZ-3B', 'QLoRA', 'PEFT', 'bitsandbytes', 'Hugging Face', 'Next.js'],
     live: 'https://muzezuru.vercel.app',
@@ -2029,8 +2013,6 @@ const ORBIT_BASE = [
   { rxB: 240, ryB: 89,  period: 90000,  phase: Math.PI * 0.2  },
   { rxB: 282, ryB: 104, period: 112000, phase: Math.PI * 1.1  },
   { rxB: 324, ryB: 120, period: 136000, phase: Math.PI * 0.7  },
-  { rxB: 366, ryB: 136, period: 162000, phase: Math.PI * 1.4  },
-  { rxB: 408, ryB: 151, period: 194000, phase: Math.PI * 0.6  },
 ];
 
 const oc   = document.getElementById('orbital');

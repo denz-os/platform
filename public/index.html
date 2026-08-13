@@ -1432,8 +1432,8 @@
           that routes plain English questions across my own services, deciding which system to call and returning the answer.
           More recently I fine-tuned
           <span class="anno-mark underline blue" data-anno-group="0" data-anno-delay="1200"><span>BLOOMZ-3B for Shona</span><svg viewBox="0 0 100 12" preserveAspectRatio="none"><path d="M1,8 Q50,4 99,8" stroke-width="2.5" stroke-dasharray="120" stroke-dashoffset="120"/></svg></span>,
-          one of Zimbabwe's main languages and severely underrepresented in mainstream AI, using QLoRA with 4-bit quantization. I cleaned a contaminated training dataset, built a manual 15-prompt evaluation scorecard since no standard Shona benchmark exists, and deployed the model as a live demo on Hugging Face Spaces. The project is called
-          <span class="anno-mark underline blue" data-anno-group="0" data-anno-delay="1400"><span>Muzezuru</span><svg viewBox="0 0 100 12" preserveAspectRatio="none"><path d="M1,8 Q50,5 99,8" stroke-width="2.5" stroke-dasharray="120" stroke-dashoffset="120"/></svg></span>.
+          one of Zimbabwe's main languages and severely underrepresented in mainstream AI, using QLoRA with 4-bit quantization on free tier compute only: Google Colab, Kaggle notebooks, and Hugging Face's free ZeroGPU tier for the live demo. I discovered and fixed an 84% data contamination issue in the training set, built a 15-prompt evaluation scorecard across 7 categories since no standard Shona benchmark exists, and shipped a full chat frontend. The project is called
+          <a href="https://muzezuru.vercel.app" target="_blank" rel="noopener" style="text-decoration:none"><span class="anno-mark underline blue" data-anno-group="0" data-anno-delay="1400"><span>Muzezuru</span><svg viewBox="0 0 100 12" preserveAspectRatio="none"><path d="M1,8 Q50,5 99,8" stroke-width="2.5" stroke-dasharray="120" stroke-dashoffset="120"/></svg></span></a>, named after the Zezuru dialect, and it is something I am continuing to develop.
           I
           <span class="anno-mark underline blue" data-anno-group="0" data-anno-delay="1600"><span>use AI tools as part of my daily workflow</span><svg viewBox="0 0 100 12" preserveAspectRatio="none"><path d="M1,8 Q50,4 99,8" stroke-width="2.5" stroke-dasharray="120" stroke-dashoffset="120"/></svg></span>
           to learn faster, move with more precision, and ship better work. The point is always to understand what I'm building, not to outsource the thinking.
@@ -2010,6 +2010,14 @@ const PROJECTS = [
     live: 'https://msg-coral.vercel.app',
     gh:   'https://github.com/denzelchingodza/msg',
     color: '#F47B20',
+  },
+  {
+    num: '09', name: 'Muzezuru',
+    desc: 'A Shona-language conversational AI fine-tuned from BLOOMZ-3B using QLoRA, built entirely on free tier compute: Google Colab, Kaggle notebooks, and Hugging Face ZeroGPU. Shona is one of Zimbabwe\'s main languages and severely underrepresented in mainstream AI training data, which is why this project exists. Discovered and fixed an 84% data contamination issue in the primary training dataset before retraining on the cleaned version. Built a custom 15-prompt evaluation scorecard across 7 categories since no standard Shona benchmark exists. Ships with a Next.js chat frontend deployed on Vercel. Active development: the pipeline is proven end-to-end, the next phase focuses on factual precision using curated Zimbabwean data.',
+    stack: ['Python', 'BLOOMZ-3B', 'QLoRA', 'PEFT', 'bitsandbytes', 'Hugging Face', 'Next.js'],
+    live: 'https://muzezuru.vercel.app',
+    gh:   'https://github.com/denzelchingodza/muzezuru',
+    color: '#006400',
   },
 ];
 

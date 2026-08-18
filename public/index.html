@@ -347,6 +347,7 @@
 
     .hero-photo {
       position: relative; overflow: hidden;
+      isolation: isolate;
     }
     .hero-photo img {
       width: 100%; height: 100%;
@@ -355,6 +356,8 @@
       filter: brightness(0.85) saturate(0.6) contrast(4);
       transform-origin: center center;
       animation: spinship 60s linear infinite;
+      will-change: transform;
+      -webkit-mix-blend-mode: screen;
       mix-blend-mode: screen;
     }
 

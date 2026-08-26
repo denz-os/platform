@@ -380,13 +380,13 @@
     /* ===== PAC-MAN DIVIDER ===== */
     .pacman-divider {
       width: 100%;
-      height: 32px;
+      height: 72px;
       background: var(--light);
       overflow: hidden;
     }
     #pacman-strip {
       width: 100%;
-      height: 32px;
+      height: 72px;
       display: block;
     }
 
@@ -2384,36 +2384,80 @@ document.querySelectorAll('.fade').forEach(el => io.observe(el));
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
 
-  const BG      = '#edeae0';
-  const DOT_COL = '#b8b4a8';
-  const PAC_COL = '#18181e';
-  const GH       = 32;          // canvas height
-  const CY       = GH / 2;      // centre y
-  const DOT_R    = 2;
-  const DOT_GAP  = 18;
-  const PAC_R    = 9;
-  const SPEED    = 1.4;         // px per frame
+  const LINE_COL = '#b8b4a8';
+  const PAC_COL  = '#18181e';
+  const GH       = 72;
+  const CY       = 52;   // line y — lower so bubbles have room above
+  const PAC_R    = 10;
+  const SPEED    = 0.55;
+  const SPACING  = 78;
 
-  let W = 0;
-  let pacX = -PAC_R * 2;
-  let mouthAngle = 0;
-  let mouthDir   = 1;
+  const CHARS = ['👾','🤖','🍕','⭐','💎','🎮','🍎','🦊','🐸','🎯','🌮','🧃','🪲','🐭','🧸'];
+  const MSGS  = [
+    'please help!','oh no!!','not me!','AHHH!!','save me!!',
+    'why me??','noooo!','run!!','goodbye world…','help!!!',
+    'i have a family!!','this is unfair','im too young','not today!!','bro why'
+  ];
 
-  function resize() {
-    W = canvas.offsetWidth;
-    canvas.width  = W;
-    canvas.height = GH;
+  let W = 0, pacX = -PAC_R * 2;
+  let mouthAngle = 0, mouthDir = 1;
+  let items = [];
+
+  function buildItems() {
+    items = [];
+    let x = SPACING;
+    let i = 0;
+    const order = [...Array(CHARS.length).keys()].sort(() => Math.random() - 0.5);
+    while (x < W + SPACING) {
+      const idx = order[i % order.length];
+      items.push({ x, emoji: CHARS[idx], msg: MSGS[idx], eaten: false });
+      x += SPACING + (Math.random() * 24 - 12);
+      i++;
+    }
   }
 
-  function dot(x) {
+  function roundRect(x, y, w, h, r) {
     ctx.beginPath();
-    ctx.arc(x, CY, DOT_R, 0, Math.PI * 2);
-    ctx.fillStyle = DOT_COL;
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+  }
+
+  function drawBubble(x, text) {
+    ctx.font = '500 9px "Space Grotesk", system-ui, sans-serif';
+    const tw  = ctx.measureText(text).width;
+    const bw  = tw + 14;
+    const bh  = 17;
+    const bx  = Math.max(4, Math.min(W - bw - 4, x - bw / 2));
+    const by  = CY - 30 - bh;
+
+    ctx.fillStyle = '#18181e';
+    roundRect(bx, by, bw, bh, 4);
     ctx.fill();
+
+    // tail
+    ctx.beginPath();
+    ctx.moveTo(x - 4, by + bh);
+    ctx.lineTo(x + 4, by + bh);
+    ctx.lineTo(x, by + bh + 5);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.fillStyle = '#edeae0';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(text, bx + bw / 2, by + bh / 2);
   }
 
   function drawPac(x, mouth) {
-    const open = mouth * (Math.PI / 5);
+    const open = mouth * (Math.PI / 4);
     ctx.beginPath();
     ctx.moveTo(x, CY);
     ctx.arc(x, CY, PAC_R, open, Math.PI * 2 - open);
@@ -2425,32 +2469,49 @@ document.querySelectorAll('.fade').forEach(el => io.observe(el));
   function frame() {
     ctx.clearRect(0, 0, W, GH);
 
-    // background line
+    // line
     ctx.beginPath();
     ctx.moveTo(0, CY);
     ctx.lineTo(W, CY);
-    ctx.strokeStyle = DOT_COL;
+    ctx.strokeStyle = LINE_COL;
     ctx.lineWidth = 1;
     ctx.stroke();
 
-    // dots — skip ones pac-man has eaten
-    const firstDot = DOT_GAP;
-    for (let x = firstDot; x < W; x += DOT_GAP) {
-      if (x > pacX + PAC_R) dot(x);   // only draw dots ahead of pac-man
+    for (const item of items) {
+      if (item.eaten) continue;
+      const dist = item.x - pacX;
+      if (dist < PAC_R * 0.6 && dist > -PAC_R) { item.eaten = true; continue; }
+
+      // draw emoji
+      ctx.font = '15px serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(item.emoji, item.x, CY);
+
+      // speech bubble when pac-man is approaching
+      if (dist > 0 && dist < 90) drawBubble(item.x, item.msg);
     }
 
-    // mouth animation
-    mouthAngle += 0.12 * mouthDir;
+    // mouth
+    mouthAngle += 0.09 * mouthDir;
     if (mouthAngle >= 1) mouthDir = -1;
     if (mouthAngle <= 0) mouthDir =  1;
-
     drawPac(pacX, mouthAngle);
 
-    // advance
     pacX += SPEED;
-    if (pacX > W + PAC_R * 2) pacX = -PAC_R * 2;
+    if (pacX > W + PAC_R * 2) {
+      pacX = -PAC_R * 2;
+      for (const item of items) item.eaten = false;
+    }
 
     requestAnimationFrame(frame);
+  }
+
+  function resize() {
+    W = canvas.offsetWidth;
+    canvas.width  = W;
+    canvas.height = GH;
+    buildItems();
   }
 
   resize();

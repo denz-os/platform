@@ -814,23 +814,17 @@
       gap: 7px;
     }
 
-    /* ===== SKILLS LAYOUT ===== */
-    .skills-layout {
-      display: flex;
-      align-items: stretch;
-      gap: 0;
-      padding: 96px 9vw;
-      border-top: 1px solid var(--border);
+    /* ===== SKILLS NETWORK BG ===== */
+    .skills-section { position: relative; overflow: hidden; }
+    #skill-net {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      pointer-events: none;
+      opacity: 0.22;
     }
-    .skills-left { max-width: 680px; flex-shrink: 0; padding: 0; border-top: none; }
-    .skills-net-wrap {
-      flex: 1;
-      min-height: 340px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    #skill-net { width: 100%; height: 100%; display: block; }
 
     /* ===== CONTACT ===== */
     .contact-note {
@@ -1614,9 +1608,9 @@
 </section>
 
 <!-- ===== SKILLS ===== -->
-<section id="skills">
-  <div class="skills-layout">
-    <div class="section-inner skills-left">
+<section class="section skills-section" id="skills">
+  <canvas id="skill-net"></canvas>
+  <div class="section-inner">
     <p class="section-label fade">Skills</p>
     <div class="skills-rows fade">
       <div class="skills-row">
@@ -1669,11 +1663,7 @@
         </div>
       </div>
     </div>
-    </div><!-- /.skills-left -->
-    <div class="skills-net-wrap fade">
-      <canvas id="skill-net"></canvas>
-    </div>
-  </div><!-- /.skills-layout -->
+  </div>
 </section>
 
 <!-- ===== CONTACT ===== -->
@@ -2438,25 +2428,24 @@ document.querySelectorAll('.fade').forEach(el => io.observe(el));
     canvas.width  = W;
     canvas.height = H;
 
-    // force-ish layout: place nodes in rough clusters with jitter
+    // spread clusters across full width
     const cx = W / 2, cy = H / 2;
     const clusterCentres = [
-      [cx * 0.45, cy * 0.35],   // 0 lang
-      [cx * 1.1,  cy * 0.35],   // 1 backend
-      [cx * 0.9,  cy * 1.55],   // 2 db
-      [cx * 0.45, cy * 1.55],   // 3 ai
-      [cx * 1.45, cy * 1.0],    // 4 infra
+      [W * 0.18, H * 0.28],   // 0 lang
+      [W * 0.55, H * 0.20],   // 1 backend
+      [W * 0.72, H * 0.72],   // 2 db
+      [W * 0.28, H * 0.72],   // 3 ai
+      [W * 0.82, H * 0.42],   // 4 infra
     ];
     const counts = [0,0,0,0,0];
-    nodes = NODES.map((n, i) => {
+    nodes = NODES.map((n) => {
       const [gcx, gcy] = clusterCentres[n.group];
-      const angle = counts[n.group] * 2.4 + n.group;
-      const rad   = 38 + counts[n.group] * 14;
+      const angle = counts[n.group] * 2.1 + n.group * 0.8;
+      const rad   = 44 + counts[n.group] * 18;
       counts[n.group]++;
       return {
-        x: Math.min(W - 50, Math.max(50, gcx + Math.cos(angle) * rad)),
-        y: Math.min(H - 20, Math.max(20, gcy + Math.sin(angle) * rad)),
-        vx: 0, vy: 0,
+        x: Math.min(W - 60, Math.max(60, gcx + Math.cos(angle) * rad)),
+        y: Math.min(H - 24, Math.max(24, gcy + Math.sin(angle) * rad)),
         label: n.label,
         col: GROUP_COL[n.group],
       };

@@ -814,17 +814,28 @@
       gap: 7px;
     }
 
-    /* ===== SKILLS NETWORK BG ===== */
-    .skills-section { position: relative; overflow: hidden; }
-    #skill-net {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      display: block;
-      pointer-events: none;
-      opacity: 0.22;
+    /* ===== SKILLS NETWORK ===== */
+    .skill-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 28px 0 36px;
     }
+    .sfbtn {
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--sub);
+      padding: 7px 18px;
+      cursor: pointer;
+      transition: background 0.18s, color 0.18s, border-color 0.18s;
+    }
+    .sfbtn:hover { border-color: var(--text); color: var(--text); }
+    .sfbtn.active { color: #edeae0; border-color: transparent; }
+    #skill-net { width: 100%; height: 500px; display: block; }
 
     /* ===== CONTACT ===== */
     .contact-note {
@@ -1608,62 +1619,17 @@
 </section>
 
 <!-- ===== SKILLS ===== -->
-<section class="section skills-section" id="skills">
-  <canvas id="skill-net"></canvas>
-  <div class="section-inner">
-    <p class="section-label fade">Skills</p>
-    <div class="skills-rows fade">
-      <div class="skills-row">
-        <span class="skills-row-num">01</span>
-        <p class="skills-row-label">Languages</p>
-        <div class="skills-chips">
-          <span class="stag"><img src="https://cdn.simpleicons.org/python/3c3c44" alt="">Python</span>
-          <span class="stag"><img src="https://cdn.simpleicons.org/typescript/3c3c44" alt="">TypeScript</span>
-          <span class="stag"><img src="https://cdn.simpleicons.org/javascript/3c3c44" alt="">JavaScript</span>
-          <span class="stag"><img src="https://cdn.simpleicons.org/postgresql/3c3c44" alt="">SQL</span>
-        </div>
-      </div>
-      <div class="skills-row">
-        <span class="skills-row-num">02</span>
-        <p class="skills-row-label">Backend / APIs</p>
-        <div class="skills-chips">
-          <span class="stag"><img src="https://cdn.simpleicons.org/fastapi/3c3c44" alt="">FastAPI</span>
-          <span class="stag"><img src="https://cdn.simpleicons.org/flask/3c3c44" alt="">Flask</span>
-          <span class="stag"><img src="https://cdn.simpleicons.org/nextdotjs/3c3c44" alt="">Next.js</span>
-          <span class="stag"><img src="https://cdn.simpleicons.org/react/3c3c44" alt="">React</span>
-        </div>
-      </div>
-      <div class="skills-row">
-        <span class="skills-row-num">03</span>
-        <p class="skills-row-label">Data / AI</p>
-        <div class="skills-chips">
-          <span class="stag"><img src="https://cdn.simpleicons.org/langchain/3c3c44" alt="">LangChain</span>
-          <span class="stag"><img src="https://cdn.simpleicons.org/scikitlearn/3c3c44" alt="">scikit-learn</span>
-          <span class="stag"><img src="https://cdn.simpleicons.org/openai/3c3c44" alt="">OpenAI APIs</span>
-          <span class="stag"><img src="https://cdn.simpleicons.org/postgresql/3c3c44" alt="">pgvector</span>
-          <span class="stag"><img src="https://cdn.simpleicons.org/huggingface/3c3c44" alt="">HuggingFace</span>
-          <span class="stag"><img src="https://cdn.simpleicons.org/gradio/3c3c44" alt="">Gradio</span>
-          <span class="stag">RAG Pipelines</span>
-          <span class="stag">PEFT / QLoRA</span>
-          <span class="stag">bitsandbytes</span>
-        </div>
-      </div>
-      <div class="skills-row">
-        <span class="skills-row-num">04</span>
-        <p class="skills-row-label">Infrastructure</p>
-        <div class="skills-chips">
-          <span class="stag"><img src="https://cdn.simpleicons.org/docker/3c3c44" alt="">Docker</span>
-          <span class="stag"><img src="https://cdn.simpleicons.org/awslambda/3c3c44" alt="">AWS Lambda</span>
-          <span class="stag"><img src="https://cdn.simpleicons.org/amazondynamodb/3c3c44" alt="">DynamoDB</span>
-          <span class="stag"><img src="https://cdn.simpleicons.org/amazonaws/3c3c44" alt="">EventBridge</span>
-          <span class="stag"><img src="https://cdn.simpleicons.org/postgresql/3c3c44" alt="">PostgreSQL</span>
-          <span class="stag"><img src="https://cdn.simpleicons.org/mongodb/3c3c44" alt="">MongoDB</span>
-          <span class="stag"><img src="https://cdn.simpleicons.org/terraform/3c3c44" alt="">Terraform</span>
-          <span class="stag"><img src="https://cdn.simpleicons.org/vercel/3c3c44" alt="">Vercel</span>
-        </div>
-      </div>
-    </div>
+<section class="section" id="skills">
+  <p class="section-label fade">Skills</p>
+  <div class="skill-filters fade" id="skillFilters">
+    <button class="sfbtn active" data-group="-1" data-color="#18181e">All</button>
+    <button class="sfbtn" data-group="0" data-color="#3776AB">Languages</button>
+    <button class="sfbtn" data-group="1" data-color="#009688">Backend / APIs</button>
+    <button class="sfbtn" data-group="2" data-color="#316192">Databases</button>
+    <button class="sfbtn" data-group="3" data-color="#F7931E">Data / AI</button>
+    <button class="sfbtn" data-group="4" data-color="#FF9900">Infrastructure</button>
   </div>
+  <canvas id="skill-net" class="fade"></canvas>
 </section>
 
 <!-- ===== CONTACT ===== -->
@@ -2397,41 +2363,41 @@ document.querySelectorAll('.fade').forEach(el => io.observe(el));
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
 
-  const ICON = 18; // icon draw size
+  const IS = 20; // icon size
+  let activeGroup = -1;
 
   const NODES = [
-    { slug: 'python',         group: 0 },
-    { slug: 'typescript',     group: 0 },
-    { slug: 'postgresql',     group: 0 }, // SQL
-    { slug: 'fastapi',        group: 1 },
-    { slug: 'flask',          group: 1 },
-    { slug: 'nextdotjs',      group: 1 },
-    { slug: 'react',          group: 1 },
-    { slug: 'postgresql',     group: 2 },
-    { slug: 'mongodb',        group: 2 },
-    { slug: 'openai',         group: 3 },
-    { slug: 'langchain',      group: 3 },
-    { slug: 'scikitlearn',    group: 3 },
-    { slug: 'huggingface',    group: 3 },
-    { slug: 'docker',         group: 4 },
-    { slug: 'awslambda',      group: 4 },
-    { slug: 'terraform',      group: 4 },
-    { slug: 'vercel',         group: 4 },
-    { slug: 'gradio',         group: 3 },
+    { slug:'python',       label:'Python',       group:0, brand:'#3776AB' },
+    { slug:'typescript',   label:'TypeScript',   group:0, brand:'#3178C6' },
+    { slug:'javascript',   label:'JavaScript',   group:0, brand:'#B8A800' },
+    { slug:'postgresql',   label:'SQL',          group:0, brand:'#316192' },
+    { slug:'fastapi',      label:'FastAPI',      group:1, brand:'#009688' },
+    { slug:'flask',        label:'Flask',        group:1, brand:'#555' },
+    { slug:'nextdotjs',    label:'Next.js',      group:1, brand:'#444' },
+    { slug:'react',        label:'React',        group:1, brand:'#00AACC' },
+    { slug:'postgresql',   label:'PostgreSQL',   group:2, brand:'#316192' },
+    { slug:'mongodb',      label:'MongoDB',      group:2, brand:'#4EA94B' },
+    { slug:'amazondynamodb',label:'DynamoDB',    group:2, brand:'#4053D6' },
+    { slug:'openai',       label:'OpenAI',       group:3, brand:'#74AA9C' },
+    { slug:'langchain',    label:'LangChain',    group:3, brand:'#1C6B3A' },
+    { slug:'scikitlearn',  label:'scikit-learn', group:3, brand:'#F7931E' },
+    { slug:'huggingface',  label:'HuggingFace',  group:3, brand:'#FF9D00' },
+    { slug:'gradio',       label:'Gradio',       group:3, brand:'#FF7C00' },
+    { slug:'docker',       label:'Docker',       group:4, brand:'#2496ED' },
+    { slug:'awslambda',    label:'AWS Lambda',   group:4, brand:'#FF9900' },
+    { slug:'terraform',    label:'Terraform',    group:4, brand:'#7B42BC' },
+    { slug:'vercel',       label:'Vercel',       group:4, brand:'#444' },
   ];
 
   const EDGES = [
-    [0,3],[0,4],[0,9],[0,10],[0,11],
-    [1,5],[1,6],[2,7],[2,8],
-    [3,7],[3,9],[3,10],[4,7],
-    [5,6],[7,8],[9,10],[9,11],[10,17],
-    [11,12],[13,14],[13,15],[14,16],
-    [0,13],[3,14],[9,12],[10,11],
+    [0,4],[0,5],[0,11],[0,12],[0,13],[0,16],
+    [1,6],[1,7],[2,6],[3,8],[3,9],[3,10],
+    [4,8],[4,11],[4,12],[5,8],
+    [6,7],[8,9],[9,10],[11,12],[11,13],[12,15],[13,14],
+    [16,17],[16,18],[17,19],
+    [0,16],[4,17],[11,14],[1,7],[3,11],
   ];
 
-  let W, H, nodes = [], pulses = [];
-
-  // preload all icons
   const imgs = NODES.map(n => {
     const img = new Image();
     img.crossOrigin = 'anonymous';
@@ -2439,49 +2405,54 @@ document.querySelectorAll('.fade').forEach(el => io.observe(el));
     return img;
   });
 
+  let W, H, nodes = [], pulses = [];
+
   function layout() {
     W = canvas.offsetWidth;
-    H = canvas.offsetHeight;
-    canvas.width  = W;
-    canvas.height = H;
+    H = 500;
+    canvas.width = W; canvas.height = H;
 
     const clusters = [
-      [W * 0.14, H * 0.25],
-      [W * 0.52, H * 0.18],
-      [W * 0.75, H * 0.68],
-      [W * 0.28, H * 0.70],
-      [W * 0.85, H * 0.38],
+      [W*0.14, H*0.28],
+      [W*0.44, H*0.18],
+      [W*0.70, H*0.70],
+      [W*0.28, H*0.72],
+      [W*0.84, H*0.40],
     ];
     const counts = [0,0,0,0,0];
-    nodes = NODES.map((n) => {
-      const [gcx, gcy] = clusters[n.group];
-      const angle = counts[n.group] * 2.0 + n.group * 0.9;
-      const rad   = 50 + counts[n.group] * 20;
+    nodes = NODES.map(n => {
+      const [gcx,gcy] = clusters[n.group];
+      const angle = counts[n.group] * 1.7 + n.group * 0.6;
+      const rad   = 52 + counts[n.group] * 24;
       counts[n.group]++;
       return {
-        x: Math.min(W - 70, Math.max(70, gcx + Math.cos(angle) * rad)),
-        y: Math.min(H - 30, Math.max(30, gcy + Math.sin(angle) * rad)),
+        x: Math.min(W-80, Math.max(80, gcx + Math.cos(angle)*rad)),
+        y: Math.min(H-40, Math.max(40, gcy + Math.sin(angle)*rad)),
+        brand: n.brand, group: n.group,
       };
     });
     pulses = [];
   }
 
-  function spawnPulse() {
-    const e = EDGES[Math.floor(Math.random() * EDGES.length)];
-    pulses.push({ a: e[0], b: e[1], t: 0, spd: 0.003 + Math.random() * 0.004 });
-  }
-  setInterval(spawnPulse, 500);
+  function active(g) { return activeGroup === -1 || g === activeGroup; }
+
+  setInterval(() => {
+    const pool = activeGroup === -1 ? EDGES : EDGES.filter(([a,b]) => NODES[a].group === activeGroup || NODES[b].group === activeGroup);
+    if (!pool.length) return;
+    const e = pool[Math.floor(Math.random()*pool.length)];
+    pulses.push({ a:e[0], b:e[1], t:0, spd:0.003+Math.random()*0.004 });
+  }, 480);
 
   function frame() {
     ctx.clearRect(0, 0, W, H);
 
     // edges
-    for (const [a, b] of EDGES) {
-      const na = nodes[a], nb = nodes[b];
+    for (const [a,b] of EDGES) {
+      const on = active(NODES[a].group) && active(NODES[b].group);
       ctx.beginPath();
-      ctx.moveTo(na.x, na.y);
-      ctx.lineTo(nb.x, nb.y);
-      ctx.strokeStyle = 'rgba(24,24,30,0.18)';
+      ctx.moveTo(nodes[a].x, nodes[a].y);
+      ctx.lineTo(nodes[b].x, nodes[b].y);
+      ctx.strokeStyle = on ? 'rgba(24,24,30,0.14)' : 'rgba(24,24,30,0.03)';
       ctx.lineWidth = 0.8;
       ctx.stroke();
     }
@@ -2490,34 +2461,74 @@ document.querySelectorAll('.fade').forEach(el => io.observe(el));
     pulses = pulses.filter(p => p.t <= 1);
     for (const p of pulses) {
       p.t += p.spd;
+      if (!active(NODES[p.a].group)) continue;
       const na = nodes[p.a], nb = nodes[p.b];
-      const px = na.x + (nb.x - na.x) * p.t;
-      const py = na.y + (nb.y - na.y) * p.t;
-      const fade = Math.sin(p.t * Math.PI);
+      const px = na.x + (nb.x-na.x)*p.t;
+      const py = na.y + (nb.y-na.y)*p.t;
+      const fade = Math.sin(p.t*Math.PI);
+      const col = activeGroup !== -1 ? na.brand : '#18181e';
       ctx.beginPath();
-      ctx.arc(px, py, 3, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(24,24,30,${fade * 0.85})`;
+      ctx.arc(px, py, 3, 0, Math.PI*2);
+      ctx.fillStyle = col;
+      ctx.globalAlpha = fade * 0.9;
       ctx.fill();
+      ctx.globalAlpha = 1;
     }
 
-    // icons
+    // nodes
     for (let i = 0; i < nodes.length; i++) {
-      const n = nodes[i], img = imgs[i];
-      if (img.complete && img.naturalWidth > 0) {
-        ctx.drawImage(img, n.x - ICON / 2, n.y - ICON / 2, ICON, ICON);
-      } else {
-        // fallback dot while image loads
+      const n = nodes[i], nd = NODES[i], img = imgs[i];
+      const on = active(nd.group);
+      ctx.globalAlpha = on ? 1 : 0.1;
+
+      // glow ring when category active
+      if (activeGroup !== -1 && on) {
         ctx.beginPath();
-        ctx.arc(n.x, n.y, 4, 0, Math.PI * 2);
-        ctx.fillStyle = '#3c3c44';
+        ctx.arc(n.x, n.y, IS*0.85, 0, Math.PI*2);
+        ctx.fillStyle = n.brand + '28';
         ctx.fill();
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, IS*0.85, 0, Math.PI*2);
+        ctx.strokeStyle = n.brand + '66';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
       }
+
+      if (img.complete && img.naturalWidth > 0) {
+        ctx.drawImage(img, n.x-IS/2, n.y-IS/2, IS, IS);
+      } else {
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, 5, 0, Math.PI*2);
+        ctx.fillStyle = '#3c3c44'; ctx.fill();
+      }
+
+      ctx.font = '500 9px "Space Grotesk", system-ui, sans-serif';
+      ctx.fillStyle = on && activeGroup !== -1 ? n.brand : '#3c3c44';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      ctx.fillText(nd.label, n.x, n.y + IS/2 + 5);
+      ctx.globalAlpha = 1;
     }
 
     requestAnimationFrame(frame);
   }
 
   function init() { layout(); frame(); }
+
+  // buttons
+  document.querySelectorAll('.sfbtn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.sfbtn').forEach(b => {
+        b.classList.remove('active');
+        b.style.background = '';
+      });
+      btn.classList.add('active');
+      btn.style.background = btn.dataset.color;
+      activeGroup = parseInt(btn.dataset.group);
+    });
+  });
+  // init All button color
+  document.querySelector('.sfbtn.active').style.background = '#18181e';
 
   window.addEventListener('resize', layout);
   const ro = new ResizeObserver(() => { if (canvas.offsetWidth > 0) { ro.disconnect(); init(); } });

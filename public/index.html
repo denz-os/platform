@@ -378,12 +378,6 @@
     }
 
     /* ===== PAC-MAN DIVIDER ===== */
-    .pacman-divider {
-      width: 100%;
-      height: 72px;
-      background: var(--light);
-      overflow: hidden;
-    }
     #pacman-strip {
       width: 100%;
       height: 72px;
@@ -1576,11 +1570,6 @@
   </div><!-- /.about-tars-wrap -->
 </section>
 
-<!-- ===== PAC-MAN DIVIDER ===== -->
-<div class="pacman-divider" aria-hidden="true">
-  <canvas id="pacman-strip"></canvas>
-</div>
-
 <!-- ===== PROJECTS (orbital) ===== -->
 <section class="proj-section" id="work">
   <div class="proj-split">
@@ -1745,6 +1734,8 @@
       </a>
     </div>
   </div>
+
+  <canvas id="pacman-strip" aria-hidden="true"></canvas>
 
   <div class="footer-bottom">
     <span class="footer-credit">Production made by Denzel Chingodza</span>
@@ -2541,15 +2532,15 @@ document.querySelectorAll('.fade').forEach(el => io.observe(el));
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
 
-  const LINE_COL = '#b8b4a8';
-  const PAC_COL  = '#18181e';
+  const LINE_COL = 'rgba(255,255,255,0.12)';
+  const PAC_COL  = '#edeae0';
   const GH       = 72;
-  const CY       = 52;   // line y — lower so bubbles have room above
+  const CY       = 52;
   const PAC_R    = 10;
   const SPEED    = 0.55;
   const SPACING  = 78;
 
-  const COLORS = ['#18181e','#3c3c44','#6a6a72','#b8b4a8','#18181e','#3c3c44','#6a6a72'];
+  const COLORS = ['#edeae0','#b8b4a8','#8a8680','#6a6a72','#edeae0','#b8b4a8','#8a8680'];
   const MSGS   = [
     'please help!','oh no!!','not me!','AHHH!!','save me!!',
     'why me??','noooo!','run!!','goodbye world…','help!!!',
@@ -2600,10 +2591,10 @@ document.querySelectorAll('.fade').forEach(el => io.observe(el));
     ctx.fill();
     // eyes
     const eyeY = y - r * 0.8;
-    ctx.fillStyle = '#edeae0';
+    ctx.fillStyle = '#0d0e12';
     ctx.beginPath(); ctx.arc(x - 3, eyeY, 2.2, 0, Math.PI * 2); ctx.fill();
     ctx.beginPath(); ctx.arc(x + 3, eyeY, 2.2, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = color === '#18181e' ? '#6a6a72' : '#18181e';
+    ctx.fillStyle = '#3c7aed';
     ctx.beginPath(); ctx.arc(x - 2.2, eyeY, 1, 0, Math.PI * 2); ctx.fill();
     ctx.beginPath(); ctx.arc(x + 3.8, eyeY, 1, 0, Math.PI * 2); ctx.fill();
   }
@@ -2630,7 +2621,7 @@ document.querySelectorAll('.fade').forEach(el => io.observe(el));
     const bx  = Math.max(4, Math.min(W - bw - 4, x - bw / 2));
     const by  = CY - 30 - bh;
 
-    ctx.fillStyle = '#18181e';
+    ctx.fillStyle = 'rgba(237,234,224,0.92)';
     roundRect(bx, by, bw, bh, 4);
     ctx.fill();
 
@@ -2642,7 +2633,7 @@ document.querySelectorAll('.fade').forEach(el => io.observe(el));
     ctx.closePath();
     ctx.fill();
 
-    ctx.fillStyle = '#edeae0';
+    ctx.fillStyle = '#18181e';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(text, bx + bw / 2, by + bh / 2);

@@ -2397,30 +2397,47 @@ document.querySelectorAll('.fade').forEach(el => io.observe(el));
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
 
+  const ICON = 18; // icon draw size
+
   const NODES = [
-    { label: 'Python',      group: 0 }, { label: 'TypeScript', group: 0 },
-    { label: 'SQL',         group: 0 }, { label: 'FastAPI',    group: 1 },
-    { label: 'Flask',       group: 1 }, { label: 'Next.js',    group: 1 },
-    { label: 'React',       group: 1 }, { label: 'PostgreSQL', group: 2 },
-    { label: 'MongoDB',     group: 2 }, { label: 'pgvector',   group: 2 },
-    { label: 'OpenAI',      group: 3 }, { label: 'RAG',        group: 3 },
-    { label: 'QLoRA',       group: 3 }, { label: 'Docker',     group: 4 },
-    { label: 'AWS Lambda',  group: 4 }, { label: 'Terraform',  group: 4 },
-    { label: 'LangChain',   group: 3 }, { label: 'Vercel',     group: 4 },
+    { slug: 'python',         group: 0 },
+    { slug: 'typescript',     group: 0 },
+    { slug: 'postgresql',     group: 0 }, // SQL
+    { slug: 'fastapi',        group: 1 },
+    { slug: 'flask',          group: 1 },
+    { slug: 'nextdotjs',      group: 1 },
+    { slug: 'react',          group: 1 },
+    { slug: 'postgresql',     group: 2 },
+    { slug: 'mongodb',        group: 2 },
+    { slug: 'openai',         group: 3 },
+    { slug: 'langchain',      group: 3 },
+    { slug: 'scikitlearn',    group: 3 },
+    { slug: 'huggingface',    group: 3 },
+    { slug: 'docker',         group: 4 },
+    { slug: 'awslambda',      group: 4 },
+    { slug: 'terraform',      group: 4 },
+    { slug: 'vercel',         group: 4 },
+    { slug: 'gradio',         group: 3 },
   ];
 
-  // group colours — all muted to fit beige palette
-  const GROUP_COL = ['#18181e','#3c3c44','#6a6a72','#3c3c44','#18181e'];
-
   const EDGES = [
-    [0,3],[0,4],[0,10],[0,11],[0,12],[0,16],
-    [1,5],[1,6],[2,7],[2,8],[2,9],
-    [3,7],[3,9],[3,10],[3,11],[4,7],
-    [5,6],[7,8],[7,9],[10,11],[10,16],
-    [11,12],[13,14],[13,15],[14,17],[0,13],[3,14],
+    [0,3],[0,4],[0,9],[0,10],[0,11],
+    [1,5],[1,6],[2,7],[2,8],
+    [3,7],[3,9],[3,10],[4,7],
+    [5,6],[7,8],[9,10],[9,11],[10,17],
+    [11,12],[13,14],[13,15],[14,16],
+    [0,13],[3,14],[9,12],[10,11],
   ];
 
   let W, H, nodes = [], pulses = [];
+
+  // preload all icons
+  const imgs = NODES.map(n => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.src = `https://cdn.simpleicons.org/${n.slug}/3c3c44`;
+    return img;
+  });
 
   function layout() {
     W = canvas.offsetWidth;
@@ -2428,90 +2445,81 @@ document.querySelectorAll('.fade').forEach(el => io.observe(el));
     canvas.width  = W;
     canvas.height = H;
 
-    // spread clusters across full width
-    const cx = W / 2, cy = H / 2;
-    const clusterCentres = [
-      [W * 0.18, H * 0.28],   // 0 lang
-      [W * 0.55, H * 0.20],   // 1 backend
-      [W * 0.72, H * 0.72],   // 2 db
-      [W * 0.28, H * 0.72],   // 3 ai
-      [W * 0.82, H * 0.42],   // 4 infra
+    const clusters = [
+      [W * 0.14, H * 0.25],
+      [W * 0.52, H * 0.18],
+      [W * 0.75, H * 0.68],
+      [W * 0.28, H * 0.70],
+      [W * 0.85, H * 0.38],
     ];
     const counts = [0,0,0,0,0];
     nodes = NODES.map((n) => {
-      const [gcx, gcy] = clusterCentres[n.group];
-      const angle = counts[n.group] * 2.1 + n.group * 0.8;
-      const rad   = 44 + counts[n.group] * 18;
+      const [gcx, gcy] = clusters[n.group];
+      const angle = counts[n.group] * 2.0 + n.group * 0.9;
+      const rad   = 50 + counts[n.group] * 20;
       counts[n.group]++;
       return {
-        x: Math.min(W - 60, Math.max(60, gcx + Math.cos(angle) * rad)),
-        y: Math.min(H - 24, Math.max(24, gcy + Math.sin(angle) * rad)),
-        label: n.label,
-        col: GROUP_COL[n.group],
+        x: Math.min(W - 70, Math.max(70, gcx + Math.cos(angle) * rad)),
+        y: Math.min(H - 30, Math.max(30, gcy + Math.sin(angle) * rad)),
       };
     });
     pulses = [];
   }
 
   function spawnPulse() {
-    const edge = EDGES[Math.floor(Math.random() * EDGES.length)];
-    pulses.push({ a: edge[0], b: edge[1], t: 0, speed: 0.004 + Math.random() * 0.004 });
+    const e = EDGES[Math.floor(Math.random() * EDGES.length)];
+    pulses.push({ a: e[0], b: e[1], t: 0, spd: 0.003 + Math.random() * 0.004 });
   }
-
-  setInterval(spawnPulse, 600);
+  setInterval(spawnPulse, 500);
 
   function frame() {
     ctx.clearRect(0, 0, W, H);
 
     // edges
-    ctx.lineWidth = 0.8;
     for (const [a, b] of EDGES) {
       const na = nodes[a], nb = nodes[b];
       ctx.beginPath();
       ctx.moveTo(na.x, na.y);
       ctx.lineTo(nb.x, nb.y);
-      ctx.strokeStyle = 'rgba(184,180,168,0.45)';
+      ctx.strokeStyle = 'rgba(24,24,30,0.18)';
+      ctx.lineWidth = 0.8;
       ctx.stroke();
     }
 
     // pulses
     pulses = pulses.filter(p => p.t <= 1);
     for (const p of pulses) {
-      p.t += p.speed;
+      p.t += p.spd;
       const na = nodes[p.a], nb = nodes[p.b];
       const px = na.x + (nb.x - na.x) * p.t;
       const py = na.y + (nb.y - na.y) * p.t;
       const fade = Math.sin(p.t * Math.PI);
       ctx.beginPath();
-      ctx.arc(px, py, 2.5, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(24,24,30,${fade * 0.9})`;
+      ctx.arc(px, py, 3, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(24,24,30,${fade * 0.85})`;
       ctx.fill();
     }
 
-    // nodes + labels
-    for (const n of nodes) {
-      ctx.beginPath();
-      ctx.arc(n.x, n.y, 4, 0, Math.PI * 2);
-      ctx.fillStyle = n.col;
-      ctx.fill();
-
-      ctx.font = '500 9px "Space Grotesk", system-ui, sans-serif';
-      ctx.fillStyle = 'rgba(60,60,68,0.75)';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'top';
-      ctx.fillText(n.label, n.x, n.y + 7);
+    // icons
+    for (let i = 0; i < nodes.length; i++) {
+      const n = nodes[i], img = imgs[i];
+      if (img.complete && img.naturalWidth > 0) {
+        ctx.drawImage(img, n.x - ICON / 2, n.y - ICON / 2, ICON, ICON);
+      } else {
+        // fallback dot while image loads
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, 4, 0, Math.PI * 2);
+        ctx.fillStyle = '#3c3c44';
+        ctx.fill();
+      }
     }
 
     requestAnimationFrame(frame);
   }
 
-  function init() {
-    layout();
-    frame();
-  }
+  function init() { layout(); frame(); }
 
   window.addEventListener('resize', layout);
-  // wait for element to have real dimensions
   const ro = new ResizeObserver(() => { if (canvas.offsetWidth > 0) { ro.disconnect(); init(); } });
   ro.observe(canvas);
 })();

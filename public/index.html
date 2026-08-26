@@ -814,6 +814,24 @@
       gap: 7px;
     }
 
+    /* ===== SKILLS LAYOUT ===== */
+    .skills-layout {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      padding: 96px 9vw;
+      border-top: 1px solid var(--border);
+    }
+    .skills-left { max-width: 680px; flex-shrink: 0; padding: 0; border-top: none; }
+    .skills-net-wrap {
+      flex: 1;
+      min-height: 340px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #skill-net { width: 100%; height: 100%; display: block; }
+
     /* ===== CONTACT ===== */
     .contact-note {
       font-size: 15px;
@@ -1596,8 +1614,9 @@
 </section>
 
 <!-- ===== SKILLS ===== -->
-<section class="section" id="skills">
-  <div class="section-inner">
+<section id="skills">
+  <div class="skills-layout">
+    <div class="section-inner skills-left">
     <p class="section-label fade">Skills</p>
     <div class="skills-rows fade">
       <div class="skills-row">
@@ -1650,7 +1669,11 @@
         </div>
       </div>
     </div>
-  </div>
+    </div><!-- /.skills-left -->
+    <div class="skills-net-wrap fade">
+      <canvas id="skill-net"></canvas>
+    </div>
+  </div><!-- /.skills-layout -->
 </section>
 
 <!-- ===== CONTACT ===== -->
@@ -2376,6 +2399,132 @@ document.querySelectorAll('.fade').forEach(el => io.observe(el));
   new MutationObserver((_, mo) => {
     if (entryEl.classList.contains('gone')) { cancelAnimationFrame(raf); mo.disconnect(); }
   }).observe(entryEl, { attributes: true, attributeFilter: ['class'] });
+})();
+
+// ===== SKILL NETWORK =====
+(function () {
+  const canvas = document.getElementById('skill-net');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  const NODES = [
+    { label: 'Python',      group: 0 }, { label: 'TypeScript', group: 0 },
+    { label: 'SQL',         group: 0 }, { label: 'FastAPI',    group: 1 },
+    { label: 'Flask',       group: 1 }, { label: 'Next.js',    group: 1 },
+    { label: 'React',       group: 1 }, { label: 'PostgreSQL', group: 2 },
+    { label: 'MongoDB',     group: 2 }, { label: 'pgvector',   group: 2 },
+    { label: 'OpenAI',      group: 3 }, { label: 'RAG',        group: 3 },
+    { label: 'QLoRA',       group: 3 }, { label: 'Docker',     group: 4 },
+    { label: 'AWS Lambda',  group: 4 }, { label: 'Terraform',  group: 4 },
+    { label: 'LangChain',   group: 3 }, { label: 'Vercel',     group: 4 },
+  ];
+
+  // group colours — all muted to fit beige palette
+  const GROUP_COL = ['#18181e','#3c3c44','#6a6a72','#3c3c44','#18181e'];
+
+  const EDGES = [
+    [0,3],[0,4],[0,10],[0,11],[0,12],[0,16],
+    [1,5],[1,6],[2,7],[2,8],[2,9],
+    [3,7],[3,9],[3,10],[3,11],[4,7],
+    [5,6],[7,8],[7,9],[10,11],[10,16],
+    [11,12],[13,14],[13,15],[14,17],[0,13],[3,14],
+  ];
+
+  let W, H, nodes = [], pulses = [];
+
+  function layout() {
+    W = canvas.offsetWidth;
+    H = canvas.offsetHeight;
+    canvas.width  = W;
+    canvas.height = H;
+
+    // force-ish layout: place nodes in rough clusters with jitter
+    const cx = W / 2, cy = H / 2;
+    const clusterCentres = [
+      [cx * 0.45, cy * 0.35],   // 0 lang
+      [cx * 1.1,  cy * 0.35],   // 1 backend
+      [cx * 0.9,  cy * 1.55],   // 2 db
+      [cx * 0.45, cy * 1.55],   // 3 ai
+      [cx * 1.45, cy * 1.0],    // 4 infra
+    ];
+    const counts = [0,0,0,0,0];
+    nodes = NODES.map((n, i) => {
+      const [gcx, gcy] = clusterCentres[n.group];
+      const angle = counts[n.group] * 2.4 + n.group;
+      const rad   = 38 + counts[n.group] * 14;
+      counts[n.group]++;
+      return {
+        x: Math.min(W - 50, Math.max(50, gcx + Math.cos(angle) * rad)),
+        y: Math.min(H - 20, Math.max(20, gcy + Math.sin(angle) * rad)),
+        vx: 0, vy: 0,
+        label: n.label,
+        col: GROUP_COL[n.group],
+      };
+    });
+    pulses = [];
+  }
+
+  function spawnPulse() {
+    const edge = EDGES[Math.floor(Math.random() * EDGES.length)];
+    pulses.push({ a: edge[0], b: edge[1], t: 0, speed: 0.004 + Math.random() * 0.004 });
+  }
+
+  setInterval(spawnPulse, 600);
+
+  function frame() {
+    ctx.clearRect(0, 0, W, H);
+
+    // edges
+    ctx.lineWidth = 0.8;
+    for (const [a, b] of EDGES) {
+      const na = nodes[a], nb = nodes[b];
+      ctx.beginPath();
+      ctx.moveTo(na.x, na.y);
+      ctx.lineTo(nb.x, nb.y);
+      ctx.strokeStyle = 'rgba(184,180,168,0.45)';
+      ctx.stroke();
+    }
+
+    // pulses
+    pulses = pulses.filter(p => p.t <= 1);
+    for (const p of pulses) {
+      p.t += p.speed;
+      const na = nodes[p.a], nb = nodes[p.b];
+      const px = na.x + (nb.x - na.x) * p.t;
+      const py = na.y + (nb.y - na.y) * p.t;
+      const fade = Math.sin(p.t * Math.PI);
+      ctx.beginPath();
+      ctx.arc(px, py, 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(24,24,30,${fade * 0.9})`;
+      ctx.fill();
+    }
+
+    // nodes + labels
+    for (const n of nodes) {
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, 4, 0, Math.PI * 2);
+      ctx.fillStyle = n.col;
+      ctx.fill();
+
+      ctx.font = '500 9px "Space Grotesk", system-ui, sans-serif';
+      ctx.fillStyle = 'rgba(60,60,68,0.75)';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      ctx.fillText(n.label, n.x, n.y + 7);
+    }
+
+    requestAnimationFrame(frame);
+  }
+
+  function init() {
+    layout();
+    frame();
+  }
+
+  window.addEventListener('resize', layout);
+  // wait for element to have real dimensions
+  const ro = new ResizeObserver(() => { if (canvas.offsetWidth > 0) { ro.disconnect(); init(); } });
+  ro.observe(canvas);
 })();
 
 // ===== PAC-MAN DIVIDER =====
